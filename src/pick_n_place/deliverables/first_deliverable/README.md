@@ -32,7 +32,7 @@ any complexity to the system.
 
 In order to understand the system, a block diagram of the system is presented below.
 
-![img.png](block_diagram.png "Block Diagram")
+![img.png](block_diagram.png)
 
 The abbreviation can be explained as follows:
  
@@ -47,4 +47,4 @@ c. _Camera(s)_ : Cam1, Cam2, Cam3, depth perception cameras .
 The process workflow chart for the following system can be broadly described as shown in the 
 flowchart below.
 
-![Process Flowchart](https://drive.google.com/uc?export=view&id=1a10wXaWskTwhAGsx39kZV4N7rIaf098i" width="320" height="240")
+![Process Flowchart](process_flowchart.png)
