@@ -32,12 +32,7 @@ any complexity to the system.
 
 In order to understand the system, a block diagram of the system is presented below.
 
-<p align="center">
-
 ![Block Diagram](block_diagram.png)
-
-<p align="center">
-
 
 The abbreviation can be explained as follows:
  
@@ -54,9 +49,6 @@ The abbreviation can be explained as follows:
 
 The process workflow chart for the following system can be broadly described as shown in the 
 flowchart below.
-<p align="center">
 
 ![Process Flowchart](process_flowchart.png)
-
-<p align="center">
 
