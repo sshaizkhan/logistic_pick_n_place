@@ -36,11 +36,14 @@ In order to understand the system, a block diagram of the system is presented be
 
 The abbreviation can be explained as follows:
  
-a. _Boxes_ : B1, B1, . . . . . . . . . , B6, can be expressed as b <sub>i</sub> .
+* a. **_Boxes_** : B1, B1, . . . . . . . . . , B6, can be expressed as bi .
 
-b. _Container_ : C1, C2, . . . . . . . , C6, can be expressed as c <sub>i</sub> .
+* b. **_Container_** : C1, C2, . . . . . . . , C6, can be expressed as ci
 
-c. _Camera(s)_ : Cam1, Cam2, Cam3, depth perception cameras .
+* c. **_Camera(s)_** : 
+  * Cam1 : for localisation of boxes.
+  * Cam2 : for localisation and QR code scanning and registration of containers
+  * Cam3 : for scanning and data transmission of QR codes on boxes
 
 ## Work process flowchart
 
