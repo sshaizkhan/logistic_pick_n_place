@@ -47,4 +47,4 @@ c. _Camera(s)_ : Cam1, Cam2, Cam3, depth perception cameras .
 The process workflow chart for the following system can be broadly described as shown in the 
 flowchart below.
 
-![Process Flowchart](https://drive.google.com/file/d/1a10wXaWskTwhAGsx39kZV4N7rIaf098i/view?usp=sharing" width="320" height="240")
+![Process Flowchart](https://drive.google.com/uc?export=view&id=1a10wXaWskTwhAGsx39kZV4N7rIaf098i" width="320" height="240")
