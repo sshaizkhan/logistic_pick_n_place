@@ -175,6 +175,7 @@ ____
     allowing it to grasp the objects. The actuation of the gripper is controlled via any micro-controller such as Arduino Uno or Mega
     and using the appropriate library that can communicate and integrate with ROS.
     ####
+    
   * **PLACE PIPELINE**:
     
     The robot after grasping the object moves to the pose of the associated QR code. Here again, the path planning is implemented
