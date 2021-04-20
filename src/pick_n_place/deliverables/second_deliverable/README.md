@@ -157,30 +157,28 @@ ____
 * #### PICK and PLACE PIPELINE
   
   * **PICK PIPELINE**:
-  
   ####
-
+  
     The robot initiate the pick pipeline by picking the top most box from the heap. The pick position is known prior to 
     the robot. The robot solves the inverse kinematics and collision detection using the appropriate libraries to create
     the grasp pose. To reach the grasp pose and a move after that, it has to go through several multi-stage approach: 
   
-      * Pre-grasp approach : Pose of the robot before approaching the grasp position
-      * Post-grasp approach: Pose of the robot after retreating from the grasp position
-      * End effector pose  : Setting posture of eef before grasping
-      * Activate gripper   : opening/vacuum creation before grasp position
-      * End effector pose  : Setting posture of eef during grasp
-      * Close gripper      : gripper sucessfully attach the object
+        * Pre-grasp approach : Pose of the robot before approaching the grasp position
+        * Post-grasp approach: Pose of the robot after retreating from the grasp position
+        * End effector pose  : Setting posture of eef before grasping
+        * Activate gripper   : opening/vacuum creation before grasp position
+        * End effector pose  : Setting posture of eef during grasp
+        * Close gripper      : gripper successfully attach the object
 
   * **GRIPPER ACTUATION**:
-  
   ####
   
     The gripper is actuated using the highly compressed air which creates a partial vacuum in the vicinity of the suction cups (bellows)
     allowing it to grasp the objects. The actuation of the gripper is controlled via any micro-controller such as Arduino Uno or Mega
     and using the appropriate library that can communicate and integrate with ROS.
   
+  ####
   * **PLACE PIPELINE**:
-  
   ####
 
     The robot after grasping the object moves to the pose of the associated QR code. Here again, the path planning is implemented
