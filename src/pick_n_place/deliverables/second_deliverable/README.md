@@ -53,9 +53,9 @@ follow the exact flow with more details clubbed with the type of library or tech
 _____________________________________________________________________
 * #### OS and COMMUNICATION:
   
-  To get started with the assignment, the computer system must have Linux installed with ROS Kinetic or higher version. 
-  The use of ROS will make it easier to integrate the hardware with software for an easier communication. ROS can communicated with other ROS system via TCP/IP protocol 
-  which makes it easier to command the robot, cameras and other hardware to perform certain actions and to get raw data as well.
+    To get started with the assignment, the computer system must have Linux installed with ROS Kinetic or higher version. 
+    The use of ROS will make it easier to integrate the hardware with software for an easier communication. ROS can communicated with other ROS system via TCP/IP protocol 
+    which makes it easier to command the robot, cameras and other hardware to perform certain actions and to get raw data as well.
 #### 
 
 *  **Library Used** :
@@ -69,7 +69,10 @@ ____
     The term "_localization_" means to define the pose (**_translation and orientation_**) of the environment variables located 
     in the system. To following equations will further explain the term.
   
+  
   * Any place in the system selected as Static Frame of the world.
+    ####
+    
   * **Robot Localization** : To simply the problem, the home position of the robot is situated at the world frame.
   
                                         [ 1 0 0 0 ]
@@ -107,7 +110,7 @@ ____
 ___
 ___
   
-* #### Robot Path Planning: 
+* #### ROBOT PATH PLANNING: 
 
     After successful localization of the system variables, the robot can move to a safe location close to the mountain of boxes. 
     This position is provided by camera 1 located on top of the boxes and is sent to the system, which through TCP/IP protocol, transfer
@@ -115,13 +118,14 @@ ___
     The path taken by the robotic manipulator will depend on what type of planning algorithm 
     has been implemented. The following algorithm are most popular for path planning : 
   
-   * RRT
+      * RRT
      
-   * AStar
+      * AStar
      
-   * RRTStar
+      * RRTStar
   
   ####
+  
   **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
               and not on the ABB robot.
 
@@ -130,11 +134,78 @@ ___
 Given the URDF file of the mobile base and the robot:
 
         MoveIt : MoveIt will generate the config package with selected path planner
-        OpenCV : For pose estimation of the boxes by Camera 2
-_________________________________________________________________________________________
+        OpenCV : For pose estimation of the boxes by Camera 2; [ real_time_pose_estimation library]
+____
+____
 
+
+* #### SCANNING and DATA TRANSMISSION:
+
+    After robot has reached the safe position guided by camera 2, the robotic manipulator scans the QR Code and send it
+    over to the computer system to be registered and matched with the respective QR code of the containers. The computer 
+    system sends over the pose of the container associated with scanned QR code to the robotic manipulator using the 
+    TCP/IP communication protocol.
+####
+
+*  **Library Used** :
+   Given the URDF file of the mobile base and the robot:
+
+        TCP/IP :  Communication protocol 
+        OpenCV :  [objdetect.hpp; imgcodecs.hpp; highgui.hpp; imgproc.hpp]
+____
+____
+
+
+* #### PICK and PLACE PIPELINE
   
+  * **PICK PIPELINE**:
+  ####
 
+    The robot initiate the pick pipeline by picking the top most box from the heap. The pick position is known prior to 
+    the robot. The robot solves the inverse kinematics and collision detection using the appropriate libraries to create
+    the grasp pose. To reach the grasp pose and a move after that, it has to go through several multi-stage approach: 
+  
+      * Pre-grasp approach : Pose of the robot before approaching the grasp position
+      * Post-grasp approach: Pose of the robot after retreating from the grasp position
+      * End effector pose  : Setting posture of eef before grasping
+      * Activate gripper   : opening/vacuum creation before grasp position
+      * End effector pose  : Setting posture of eef during grasp
+      * Close gripper      : gripper sucessfully attach the object
+
+  * **GRIPPER ACTUATION**:
+  ####
+  
+    The gripper is actuated using the highly compressed air which creates a partial vacuum in the vicinity of the suction cups (bellows)
+    allowing it to grasp the objects. The actuation of the gripper is controlled via any micro-controller such as Arduino Uno or Mega
+    and using the appropriate library that can communicate and integrate with ROS.
+  
+  * **PLACE PIPELINE**:
+  ####
+
+    The robot after grasping the object moves to the pose of the associated QR code. Here again, the path planning is implemented
+    for the base of the robotic manipulator i.e. the mobile base. The same path planning that is described above is used to 
+    move the robotic manipulator to the pre place position. To reach the place pose and release the box into the container, the
+    manipulator follows the following approach:
+
+      * Place pose         :  Setting the place location pose
+      * Pre-place approach :  Pose of the robot before placing the box in container
+      * Post-place retreat :  Pose of the robot after placing the box in container
+      * End effector pose  :  Pose of the end effector after placing - deactivating the vacuum
+####
+
+*  **Library Used** :
+   The above pick and place operation has been performed using Moveit config package and libraries. 
+
+        MoveIt :  [planning_scene_interface.h; move_group_interface.h]
+        TF2 :     [tf2_geometry_msgs.h]
+        Arduino : rosserial library for ROS and Arduino - [ArduinoHardware.h; ArduinoTcpHardware.h]
+____
+____
+
+After the box is placed into its associated container, the robot moves to pick new box, thus completing one complete cycle.
+After all the boxes are picked, the robot moves to the home position and awaits new order from the computer system.
+
+    
    
 
 
