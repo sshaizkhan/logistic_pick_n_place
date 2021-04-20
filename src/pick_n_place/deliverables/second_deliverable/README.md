@@ -2,8 +2,8 @@
 # LOGISTICS CASE PICKING
 
 ## SECOND DELIVERABLE
-
-**Components detail and Implementation plan**
+# 
+**Components Detail**
 
 This deliverable is based on the solution presented in the first deliverable. The deliverable consists of brief summary 
 of the components and technologies that are used in order to present a solution to the given logistic case picking problem.
@@ -45,4 +45,11 @@ Therefore, the various components used as are follows:
   created using vacuum generator which uses highly compressed air to create a partial vacuum under the bellows to lift the items.
   For this task, four bellows above 6cm diameter and a pressure of roughly 12kPa can easily lift 15kg payload.
   
+**CAD Model Assembly for the proposed system**
+
+![system_components](system_components.jpg)
+
+![system_components_2](system_components_2.jpg)
+
+
 
