@@ -66,8 +66,8 @@ ____
 
 * #### LOCALIZATION:
 
-  The term "_localization_" means to define the pose (**_translation and orientation_**) of the environment variables located 
-  in the system. To following equations will further explain the term.
+    The term "_localization_" means to define the pose (**_translation and orientation_**) of the environment variables located 
+    in the system. To following equations will further explain the term.
   
   * Any place in the system selected as Static Frame of the world.
   * **Robot Localization** : To simply the problem, the home position of the robot is situated at the world frame.
@@ -91,6 +91,7 @@ ____
       
                           wTbi = wTc1 x c1Tbi
 ####
+
   * **Container localization** : 
     * Similar transformation for container and camera 2 can be written as: 
       
@@ -108,14 +109,18 @@ ___
   
 * #### Robot Path Planning: 
 
-  After successful localization of the system variables, the robot can move to a safe location close to the mountain of boxes. 
-  This position is provided by camera 1 located on top of the boxes and is sent to the system, which through TCP/IP protocol, transfer
-  the location to the robot controller. The complete assembly of robot + mobile base can be considered as one single unit - robotic manipulator. 
-  The path taken by the robotic manipulator will depend on what type of planning algorithm 
-  has been implemented. The following algorithm are most popular for path planning : 
+    After successful localization of the system variables, the robot can move to a safe location close to the mountain of boxes. 
+    This position is provided by camera 1 located on top of the boxes and is sent to the system, which through TCP/IP protocol, transfer
+    the location to the robot controller. The complete assembly of robot + mobile base can be considered as one single unit - robotic manipulator. 
+    The path taken by the robotic manipulator will depend on what type of planning algorithm 
+    has been implemented. The following algorithm are most popular for path planning : 
+  
    * RRT
+     
    * AStar
+     
    * RRTStar
+  
   ####
   **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
               and not on the ABB robot.
