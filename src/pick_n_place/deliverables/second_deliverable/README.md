@@ -14,12 +14,6 @@ Therefore, the various components used as are follows:
   should be able to reach a height of 1.5m withing its workspace and carry load between 10 - 15 kg. Based on the given conditions, 
   **_ABB IBR2400 and IBR2600_** would be best suitable for this task. It has reach of 1.55 - 1.85 respectively with load carrying capacity
   from 12 - 20 kg. To read more on this, please [click here.](https://new.abb.com/products/robotics/industrial-robots/robot-selector)
-
-[comment]: <> (  <p align="center">)
-
-[comment]: <> (  <img src="https://drive.google.com/uc?export=view&id=13_EwEY7583n2_S4qesi8AydiIFFW0fBn" alt="Sublime's custom image"/>)
-
-[comment]: <> (</p>)
   
 
 * **Mobile Platform**: Traditionally, the pick and place position are within the workspace of the robotic manipulator but in this problem, having
@@ -56,8 +50,21 @@ Therefore, the various components used as are follows:
 
 The implementation of the solution is based on the process flowchart presented in the first deliverable. The implementation will
 follow the exact flow with more details clubbed with the type of library or technology it will use or has to be developed for successful implementation.
+_____________________________________________________________________
+* #### OS and COMMUNICATION:
+  
+  To get started with the assignment, the computer system must have Linux installed with ROS Kinetic or higher version. 
+  The use of ROS will make it easier to integrate the hardware with software for an easier communication. ROS can communicated with other ROS system via TCP/IP protocol 
+  which makes it easier to command the robot, cameras and other hardware to perform certain actions and to get raw data as well.
+#### 
 
-* #### Localization:
+*  **Library Used** :
+
+        TCP/IP Protocol : The Custom TCP/IP protocol might need to be developed
+____
+____
+
+* #### LOCALIZATION:
 
   The term "_localization_" means to define the pose (**_translation and orientation_**) of the environment variables located 
   in the system. To following equations will further explain the term.
@@ -69,20 +76,61 @@ follow the exact flow with more details clubbed with the type of library or tech
                           wTr    =      [ 0 1 0 0 ]
                                         [ 0 0 1 0 ]
                                         [ 0 0 0 1 ]
-    Here, _aTb_ represents, transformation matrix of **b** w.r.t **a**  
     
+    Here, _aTb_ represents, transformation matrix of **b** w.r.t **a**  
+####
+
   * **Camera Localization ( Cam 1 & Cam 2)** :
     * Fixed Camera positions
     * Fixed transformation
     * No need for the transformation of Cam 3
+####
+
   * **Box localization** : 
     * The transformation of box bi w.r.t camera 1 is known, c1**T**bi, hence the transformation of box w.r.t. world:
-      ####  w**T**bi = w**T**c1 x c1**T**bi
+      
+                          wTbi = wTc1 x c1Tbi
+####
   * **Container localization** : 
     * Similar transformation for container and camera 2 can be written as: 
-      #### w**T**ci = w**T**c2 x c2**T**ci
+      
+                          wTci = wTc2 x c2Tci
+####  
+  This concludes the localization of the unknown objects in the system w.r.t. to a single world frame. Now the system is
+  aware of the pose of each and every variable in the work environment.
+####
+
+* **Library Used** :
+
+        EIGEN3: eigen3 library is availabe for both C++ and Python
+___
+___
   
-  This concludes the localization of the unknown objects in the system w.r.t. to a single world frame
+* #### Robot Path Planning: 
+
+  After successful localization of the system variables, the robot can move to a safe location close to the mountain of boxes. 
+  This position is provided by camera 1 located on top of the boxes and is sent to the system, which through TCP/IP protocol, transfer
+  the location to the robot controller. The complete assembly of robot + mobile base can be considered as one single unit - robotic manipulator. 
+  The path taken by the robotic manipulator will depend on what type of planning algorithm 
+  has been implemented. The following algorithm are most popular for path planning : 
+   * RRT
+   * AStar
+   * RRTStar
+  ####
+  **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
+              and not on the ABB robot.
+
+
+*  **Library Used** :
+Given the URDF file of the mobile base and the robot:
+
+        MoveIt : MoveIt will generate the config package with selected path planner
+        OpenCV : For pose estimation of the boxes by Camera 2
+_________________________________________________________________________________________
+
+  
+
+   
 
 
   
