@@ -123,9 +123,7 @@ ___
       * AStar
      
       * RRTStar
-  
-  ####
-  
+
   **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
               and not on the ABB robot.
 
@@ -159,6 +157,7 @@ ____
 * #### PICK and PLACE PIPELINE
   
   * **PICK PIPELINE**:
+  
   ####
 
     The robot initiate the pick pipeline by picking the top most box from the heap. The pick position is known prior to 
@@ -173,6 +172,7 @@ ____
       * Close gripper      : gripper sucessfully attach the object
 
   * **GRIPPER ACTUATION**:
+  
   ####
   
     The gripper is actuated using the highly compressed air which creates a partial vacuum in the vicinity of the suction cups (bellows)
@@ -180,6 +180,7 @@ ____
     and using the appropriate library that can communicate and integrate with ROS.
   
   * **PLACE PIPELINE**:
+  
   ####
 
     The robot after grasping the object moves to the pose of the associated QR code. Here again, the path planning is implemented
