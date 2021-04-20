@@ -155,8 +155,7 @@ ____
 
 
 * #### PICK and PLACE PIPELINE
-  ###
-  
+ 
   * **PICK PIPELINE**:
   
     The robot initiate the pick pipeline by picking the top most box from the heap. The pick position is known prior to 
