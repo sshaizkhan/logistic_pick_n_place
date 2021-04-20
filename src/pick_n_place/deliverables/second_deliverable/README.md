@@ -128,7 +128,7 @@ ___
               and not on the ABB robot.
 
 
-*  **Library Used** :
+*  **Libraries Used** :
 Given the URDF file of the mobile base and the robot:
 
         MoveIt : MoveIt will generate the config package with selected path planner
@@ -145,7 +145,7 @@ ____
     TCP/IP communication protocol.
 ####
 
-*  **Library Used** :
+*  **Libraries Used** :
    Given the URDF file of the mobile base and the robot:
 
         TCP/IP :  Communication protocol developed earlier
@@ -189,7 +189,7 @@ ____
         * End effector pose  :  Pose of the end effector after placing - deactivating the vacuum
 ####
 
-*  **Library Used** :
+*  **Libraries Used** :
    The above pick and place operation has been performed using Moveit config package and libraries. 
 
         MoveIt           : [planning_scene_interface.h; move_group_interface.h]
@@ -202,10 +202,3 @@ ____
 
 After the box is placed into its associated container, the robot moves to pick new box, thus completing one complete cycle.
 After all the boxes are picked, the robot moves to the home position and awaits new order from the computer system.
-
-    
-   
-
-
-  
-
