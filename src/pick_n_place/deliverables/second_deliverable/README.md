@@ -40,9 +40,9 @@ Therefore, the various components used as are follows:
   For this task, four bellows above 6cm diameter and a pressure of roughly 12kPa can easily lift 15kg payload.
   
 ### CAD Model Assembly for the proposed system
-
+#### 
 ![system_components](system_components.jpg)
-
+####
 ![system_components_2](system_components_2.jpg)
 
 ### 
@@ -148,7 +148,7 @@ ____
 *  **Library Used** :
    Given the URDF file of the mobile base and the robot:
 
-        TCP/IP :  Communication protocol 
+        TCP/IP :  Communication protocol developed earlier
         OpenCV :  [objdetect.hpp; imgcodecs.hpp; highgui.hpp; imgproc.hpp]
 ____
 ____
