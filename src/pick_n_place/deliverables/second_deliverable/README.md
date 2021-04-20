@@ -124,7 +124,7 @@ ___
      
       * RRTStar
 
-  **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
+    **NOTE:** : While moving from world position to the position close to the boxes, the path planning is implemented on mobile base
               and not on the ABB robot.
 
 
