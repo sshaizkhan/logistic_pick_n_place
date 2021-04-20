@@ -155,6 +155,7 @@ ____
 
 
 * #### PICK and PLACE PIPELINE
+  ###
   
   * **PICK PIPELINE**:
   
@@ -192,9 +193,11 @@ ____
 *  **Library Used** :
    The above pick and place operation has been performed using Moveit config package and libraries. 
 
-        MoveIt :  [planning_scene_interface.h; move_group_interface.h]
-        TF2 :     [tf2_geometry_msgs.h]
-        Arduino : rosserial library for ROS and Arduino - [ArduinoHardware.h; ArduinoTcpHardware.h]
+        MoveIt           : [planning_scene_interface.h; move_group_interface.h]
+        IK Solver        : kinematics and dynamics library (kdl)
+        Collision Solver : flexible collison library (fcl)
+        TF2              : [tf2_geometry_msgs.h]
+        Arduino          : rosserial librar -  [ArduinoHardware.h; ArduinoTcpHardware.h]
 ____
 ____
 
