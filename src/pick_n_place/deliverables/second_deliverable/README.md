@@ -196,9 +196,48 @@ ____
         IK Solver        : kinematics and dynamics library (kdl)
         Collision Solver : flexible collison library (fcl)
         TF2              : [tf2_geometry_msgs.h]
-        Arduino          : rosserial librar -  [ArduinoHardware.h; ArduinoTcpHardware.h]
-____
-____
+        Arduino          : rosserial library -  [ArduinoHardware.h; ArduinoTcpHardware.h]
 
 After the box is placed into its associated container, the robot moves to pick new box, thus completing one complete cycle.
 After all the boxes are picked, the robot moves to the home position and awaits new order from the computer system.
+
+___
+___
+
+### SYSTEM LIMITATIONS AND POSSIBLE SOLUTIONS
+
+#### 1. Robot and accompanying appliance Power Problem
+According to the proposed solution, the robotic manipulator consists of two components:
+        
+    * 6 dof ABB IRB2600 or IRB2400 along with vacuum generation system
+    * MAV3K Autonomous Mobile Robot (AMR)
+
+Although the mobile platform is rechargeable, the robot controller needs to be plugged in order to have functionality. If
+a wired connection is provided, it would come in the robot's way and is an unknown variable in the work space. Also, the wire
+will clutter the environment and make it hard for robot to navigate the work environment.
+
+#### Suggested Solution
+There are two possible solutions to overcome wired connection problem. First is to provide on board power source and the
+second is to arrange an overhead power system.
+
+* **_On-board Power_** : The mobile platform has a load capacity of **3000lbs** and the ABB robot weighs around **650lbs**. The remaining
+space and the weight can be utilized to house the platform with LiPo batteries. The amount of lithium cells will depends on the power 
+consumption of the robot and the vacuum generator. Just as these type of batteries are used for Tesla, LiPo batteries should be
+sufficient enough to power the robotic system.  
+
+
+* **_Overhead Power Mesh / Wires_** : The overhead power mesh / wire is also a feasible solution. It works in a same manner as it work for
+metro with overhead running power supply wires. But in this case, the wire or mesh of wires will at least cover the entire working area for continuous
+power supply to robotic system. Although, this solution is not the best solution for Japan, where earthquakes are frequent and it might lead to 
+injury or severe electrocution to the onsite workers if it happens to fall over.  
+  
+#### 2. Containers QR Code scanning
+The current proposed solution uses an overhead gantry style camera scanning system, where it can slide on the gantry to scan
+the boxes if they are out of FOV. 
+
+#### Suggested Solution
+This problem might be resolved with the pre-installed camera available with MAV3K mobile platform or a camera can be installed on 
+the mobile platform. Assuming that the containers are lined up in a straight line, the camera will scan within FOV, the number
+of QR Codes and try to register and match it with the QR code available on the grasped box. It doesn't match with any QR code on 
+containers, the platform will move along the line of containers and scan for QR codes within FOV. Once found the platform will
+navigate to the container and place the box following the place protocol.
