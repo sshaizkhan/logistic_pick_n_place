@@ -131,7 +131,18 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/shahwaz/Documents/dev-shahwaz-khan/build/gtest/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb2400_moveit_config/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb6640_moveit_config/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_resources/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/mobilebot_description/cmake_install.cmake")
   include("/home/shahwaz/Documents/dev-shahwaz-khan/build/pick_n_place/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb2400_support/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb4400_support/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb5400_support/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb6600_support/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb6640_support/cmake_install.cmake")
+  include("/home/shahwaz/Documents/dev-shahwaz-khan/build/abb/abb_irb2400_moveit_plugins/cmake_install.cmake")
 
 endif()
 
