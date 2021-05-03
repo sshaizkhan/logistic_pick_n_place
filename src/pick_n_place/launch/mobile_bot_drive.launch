@@ -1,0 +1,32 @@
+<launch>
+
+    <arg name="model" default="$(find abb_irb2400_support)/urdf/irb2400_mobile_base.urdf.xacro "/>
+<!--    <arg name="model" default="$(find abb_irb2400_support)/urdf/irb2400.urdf"/>-->
+
+    <!--    <arg name="rvizconfig" default="$(find mobilebot_launch)/config/robot_urdf.rviz"/>-->
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) --inorder"/>
+
+    <!--    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>-->
+    <node name="rviz" pkg="rviz" type="rviz" />
+
+
+    <!--    Load joint state controller configuration from YAML file to parameter server-->
+    <rosparam file="$(find abb_irb2400_support)/config/joint_states.yaml"/>
+    <rosparam file="$(find abb_irb2400_support)/config/diff_drive.yaml"/>
+
+    <!--    Load the controllers-->
+    <node name="robot_controller_spawner" pkg="controller_manager" type="spawner"
+          respawn="true" output="screen"
+          args="/abb_irb2400/joint_state_controller
+                /abb_irb2400/diff_drive_controller"/>
+
+    <!--    Convert joint states to TF transforms for rviz-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          respawn="false" output="screen">
+    </node>
+
+    <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+        <param name="default_topic" value="/abb_irb2400/diff_drive_controller/cmd_vel"/>
+    </node>
+
+</launch>

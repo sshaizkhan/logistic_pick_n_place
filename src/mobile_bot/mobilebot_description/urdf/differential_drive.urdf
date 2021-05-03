@@ -1,0 +1,103 @@
+<?xml version = "1.0" ?>
+<robot name = "Differential_Drive_Bot">
+
+    <!-- /////////////////////   Chassis   //////////////////////////////////// -->
+    <link name = "chassis">
+        <visual>
+            <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/mobile_base.dae" />
+            </geometry>
+        </visual>
+    </link>
+
+    <!-- /////////////////////////     Wheels     ///////////////////////////////-->
+    <!--    Right Back Wheel-->
+    <link name = "right_back_wheel">
+        <visual>
+            <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/wheel_mobile_base.dae" />
+            </geometry>
+            <material name = "Black">
+                <color rgba = "0 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name = "right_back_wheel_joint" type = "continuous">
+        <parent link = "chassis"/>
+        <child link = "right_back_wheel"/>
+        <origin rpy = '0 0 0' xyz="-0.505 -0.67 -0.35"/>
+        <axis xyz = "0 1 0"/>
+        <limit effort = "100" velocity = "100"/>
+        <dynamics damping = "0.0" friction = "0.0"/>
+    </joint>
+
+    <!--    Right Front Wheel-->
+    <link name = "right_front_wheel">
+        <visual>
+            <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/wheel_mobile_base.dae" />
+            </geometry>
+            <material name = "Black">
+                <color rgba = "0 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name = "right_front_wheel_joint" type = "continuous">
+        <parent link = "chassis"/>
+        <child link = "right_front_wheel"/>
+        <origin rpy = '0 0 0' xyz="0.505 -0.67 -0.35"/>
+        <axis xyz = "0 1 0"/>
+        <limit effort = "100" velocity = "100"/>
+        <dynamics damping = "0.0" friction = "0.0"/>
+    </joint>
+
+    <!--   Left Back Wheel-->
+    <link name = "left_back_wheel">
+        <visual>
+            <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/wheel_mobile_base.dae" />
+            </geometry>
+            <material name = "Black">
+                <color rgba = "0 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name = "left_back_wheel_joint" type = "continuous">
+        <parent link = "chassis"/>
+        <child link = "left_back_wheel"/>
+        <origin xyz="-0.505 0.67 -0.35" rpy = "0 0 0" />
+        <axis xyz = "0 1 0"/>
+        <limit effort = "100" velocity = "100"/>
+        <dynamics damping = "0.0" friction = "0.0"/>
+    </joint>
+
+    <!--    Left Front Wheel-->
+    <link name = "left_front_wheel">
+        <visual>
+            <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/wheel_mobile_base.dae" />
+            </geometry>
+            <material name = "Black">
+                <color rgba = "0 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name = "left_front_wheel_joint" type = "continuous">
+        <parent link = "chassis"/>
+        <child link = "left_front_wheel"/>
+        <origin rpy = '0 0 0' xyz="0.505 0.67 -0.35"/>
+        <axis xyz = "0 1 0"/>
+        <limit effort = "100" velocity = "100"/>
+        <dynamics damping = "0.0" friction = "0.0"/>
+    </joint>
+
+</robot>

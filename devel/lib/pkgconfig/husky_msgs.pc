@@ -1,0 +1,8 @@
+prefix=/home/shahwaz/Documents/dev-shahwaz-khan/devel
+
+Name: husky_msgs
+Description: Description of husky_msgs
+Version: 0.4.8
+Cflags: -I/home/shahwaz/Documents/dev-shahwaz-khan/devel/include
+Libs: -L${prefix}/lib 
+Requires: std_msgs message_runtime

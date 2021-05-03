@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<robot name = "Diff_Drive" xmlns:xacro ="http://ros.org/wiki/xacro">
+<!--///////////////////////////////////////////////////////////////-->
+<!--  Materials Included   -->
+    <material name = "Black">
+        <color rgba = "0 0 0 1"/>
+    </material>
+    <material name="White">
+        <color rgba = "1.0 1.0 1.0 1.0 "/>
+    </material>
+
+<!--    ////////////////////////////////////////////////////////////////////-->
+<!--    Transmission Block-->
+    <xacro:macro name="Transmission_Block" params="joint_name">
+        <transmission name="${joint_name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint_name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${joint_name}_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+<!--    //////////////////////////////////////////////////////////////////////-->
+<!--Dummy link-->
+    <link name="dummy"/>
+<!--    Chassis-->
+    <link name = "chassis">
+        <inertial>
+            <origin xyz="0 0 0 " rpy="0 0 0 "/>
+            <mass value="811.10"/>
+            <inertia ixx="104.10" ixy="0.0" ixz="0.00"
+                     iyy="194.79" iyz="0.0"
+                     izz="275.36"/>
+        </inertial>
+        <visual>
+            <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/visual/mobile_base.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+            <geometry>
+                <mesh filename="package://mobilebot_description/meshes/collision/mobile_base.stl" />
+            </geometry>
+        </collision>
+    </link>
+
+    <gazebo reference="chassis">
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <joint name="dummy_joint" type="fixed">
+        <parent link="dummy"/>
+        <child link="chassis"/>
+        <origin xyz="0.0 0.0 0.43" rpy="0 0 0" />
+        <axis xyz="0 0 1" rpy="0 0 0" />
+    </joint>
+
+    <!--    Wheels-->
+    <xacro:macro name="wheel" params="prefix suffix X Y Z">
+        <link name="${prefix}_${suffix}_wheel">
+            <inertial>
+                <mass value="6.28" />
+                <origin xyz="0 0 0" />
+                <inertia  ixx="0.03" ixy="0" ixz="0" iyy="0.03" iyz="0" izz="0.05" />
+            </inertial>
+            <visual>
+                <origin rpy="1.57 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://mobilebot_description/meshes/visual/wheel_mobile_base.dae" />
+                </geometry>
+                <material name="Black"/>
+            </visual>
+            <collision>
+                <origin rpy="1.57 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://mobilebot_description/meshes/collision/wheel_mobile_base.stl" />
+                </geometry>
+            </collision>
+        </link>>
+
+        <gazebo reference="${prefix}_${suffix}_wheel">
+            <material>Gazebo/Black</material>
+            <turnGravityOff>false</turnGravityOff>
+            <mu1 value="1000000.0"/>
+            <mu2 value="100.0"/>
+            <fdir1>1 0 0</fdir1>
+            <kp value="100000000000000000.0"/>
+            <kd value="1.0"/>
+        </gazebo>
+
+        <joint name="${prefix}_${suffix}_wheel_joint" type="continuous">
+            <parent link="chassis"/>
+            <child link="${prefix}_${suffix}_wheel"/>
+            <origin xyz="${X} ${Y} ${Z}" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+            <limit effort = "100" velocity = "100"/>
+            <dynamics damping = "0.0" friction = "0.0"/>
+        </joint>
+
+        <transmission name="${prefix}_${suffix}_wheel_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="${prefix}_${suffix}_wheel_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="${prefix}_${suffix}_wheel_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+    </xacro:macro>
+
+    <xacro:wheel prefix="left" suffix="back" X="0.465" Y="-0.76" Z="-0.35"/>
+    <xacro:wheel prefix="left" suffix="front" X="-0.535" Y="-0.76" Z="-0.35"/>
+    <xacro:wheel prefix="right" suffix="back" X="0.465" Y="0.64" Z="-0.35"/>
+    <xacro:wheel prefix="right" suffix="front" X="-0.535" Y="0.64" Z="-0.35"/>
+
+<!--/////////////////////////////////////////////////////////////////-->
+    <link name="hokuyo_sensor">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="Blue"/>
+        </visual>
+    </link>
+
+    <joint name="hokuyo_joint" type="fixed">
+        <origin xyz="0.7 0 0" rpy="0 0 0"/>
+        <parent link="chassis"/>
+        <child link="hokuyo_sensor"/>
+    </joint>
+
+    <gazebo reference="hokuyo_sensor">
+        <material>Gazebo/Blue</material>
+        <turnGravityOff>false</turnGravityOff>
+        <sensor type="ray" name="chassis_hokuyo_sensor">
+            <pose>0.025 0 0 0 0 0</pose>
+            <visualize>false</visualize>
+            <update_rate>40</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.57</min_angle>
+                        <max_angle>1.57</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>10.0</max>
+                    <resolution>0.001</resolution>
+                </range>
+            </ray>
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/scan</topicName>
+                <frameName>hokuyo_sensor</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+<!--//////////////////////////////////////////////////////////////////////-->
+<!--    ROS Control Plugin-->
+    <gazebo>
+        <plugin name="gazebo_ros_control"  filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
+        </plugin>
+    </gazebo>
+
+</robot>
