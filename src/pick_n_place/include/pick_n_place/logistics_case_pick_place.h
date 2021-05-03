@@ -70,14 +70,7 @@ public:
 //    Std Robot vector variables
     std::vector<std::string> joint_names;
     std::vector<std::string> link_names;
-    std::vector<std::vector<double>> boxes_position;
-    std::vector<std::vector<double>> containers_position;
-    std::string box_object_id = "box_6";
 
-
-    double x_position = 1.5;
-
-    std::vector<std::string> boxes_id;
     std::string robot_home_position = "home";
 
 //    Publishers and Subscribers
@@ -99,21 +92,21 @@ public:
 
     void spawnContainers();
 
-    static std::vector<double> calculateBoxPickPose(std::vector<double> &box_origin);
+    static Coordinate calculateBoxPickPose(const Box& box);
 
     void updatePlanningScene();
 
-    bool moveToPickPose(std::vector<double> target_pose);
+    bool moveToPickPose(const Coordinate& target_position);
 
-    bool moveToPlacePose(std::vector<double> &place_target_pose);
+    bool moveToPlacePose(const Coordinate& target_position);
 
-    void attachCollisionObjects(std::string &object_id);
+    void attachCollisionObjects(std::string object_id);
 
-    void detachCollisionObjects(std::string &object_id);
+    void detachCollisionObjects(std::string object_id);
 
-    void pickBox(std::vector<double>& box_position);
+    void pickBox(Box box);
 
-    void placeBox(std::vector<double>& container_position);
+    void placeBox(Coordinate coordinate);
 
     static void printVector(std::vector<std::string>& input);
 

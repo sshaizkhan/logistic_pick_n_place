@@ -99,6 +99,8 @@ pick_n_place/coordinate.h
 /home/shahwaz/Documents/dev-shahwaz-khan/src/pick_n_place/src/logistics_case_pick_place.cpp
 pick_n_place/logistics_case_pick_place.h
 /home/shahwaz/Documents/dev-shahwaz-khan/src/pick_n_place/src/pick_n_place/logistics_case_pick_place.h
+utility
+-
 
 /home/shahwaz/Documents/dev-shahwaz-khan/src/pick_n_place/src/mock_camera_manager.cpp
 pick_n_place/camera_manager.h

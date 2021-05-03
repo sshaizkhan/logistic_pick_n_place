@@ -4,6 +4,12 @@
 
 #include "pick_n_place/logistics_case_pick_place.h"
 
+#include <utility>
+
+const double DEPTH_CLEARANCE_FOR_PICKUP = 0.10;
+const double HEIGHT_CLEARANCE_FOR_PLACE = 0.2;
+const double DEPTH_OFFSET_FOR_PLACE=0.2;
+
 Pick_Place::Pick_Place() {
 
     std::cout << "LOADING MOVE GROUP FOR ABB IRB2400 INDUSTRIAL ROBOT" << std::endl;
@@ -66,7 +72,7 @@ void Pick_Place::addTable(std::string &object_id, double x, double y, double z) 
     planning_scene_interface.applyCollisionObject(collision_object);
 }
 
-void Pick_Place::addBoxes(Box& box) {
+void Pick_Place::addBoxes(Box &box) {
 
     //    Creating Box Environment
     /* collision object created */
@@ -101,7 +107,7 @@ void Pick_Place::addBoxes(Box& box) {
     planning_scene_interface.applyCollisionObject(collision_object);
 }
 
-void Pick_Place::addContainers(Box& container) {
+void Pick_Place::addContainers(Box &container) {
 
 //    Creating Containers Environment
     /* collision object created */
@@ -144,7 +150,7 @@ void Pick_Place::addContainers(Box& container) {
 
 void Pick_Place::spawnBoxes() {
     std::vector<Box> boxes = getMockBoxes();
-    for (auto & box : boxes) {
+    for (auto &box : boxes) {
         addBoxes(box);
         std::cout << "B0X " << box.getUniqueId() << " ADDED TO THE PLANNING SCENE" << std::endl;
     }
@@ -152,7 +158,7 @@ void Pick_Place::spawnBoxes() {
 
 void Pick_Place::spawnContainers() {
     std::vector<Box> containers = getMockContainer();
-    for (auto & container : containers) {
+    for (auto &container : containers) {
         addContainers(container);
         std::cout << "CONTAINER " << container.getUniqueId() << " ADDED TO THE PLANNING SCENE" << std::endl;
     }
@@ -162,10 +168,10 @@ void Pick_Place::spawnTables() {
     std::string box_table = "table_top_boxes";
     std::string container_table = "table_top_containers";
 
-    addTable(box_table, x_position, 0.0, 0.21);
+    addTable(box_table, 1.5, 0.0, 0.21);
     std::cout << "BOXES TABLE ADDED TO THE PLANNING SCENE" << std::endl;
 
-    addTable(container_table, -x_position, 0.0, 0.21);
+    addTable(container_table, -1.5, 0.0, 0.21);
     std::cout << "CONTAINERS TABLE ADDED TO THE PLANNING SCENE" << std::endl;
 }
 
@@ -178,23 +184,21 @@ void Pick_Place::spawnEnvironment() {
     spawnTables();
 }
 
-std::vector<double> Pick_Place::calculateBoxPickPose(std::vector<double> &box_origin) {
-    std::vector<double> pick_pose;
-    pick_pose = box_origin;
-    pick_pose[0] = pick_pose[0] - (0.5 / 2);
-    return pick_pose;
+Coordinate Pick_Place::calculateBoxPickPose(const Box &box) {
+    return {box.getCenterCoordinate().getX() - (box.getDepth() / 2) - DEPTH_CLEARANCE_FOR_PICKUP,
+            box.getCenterCoordinate().getY(), box.getCenterCoordinate().getZ()};
 }
 
-bool Pick_Place::moveToPickPose(std::vector<double> target_pose) {
+bool Pick_Place::moveToPickPose(const Coordinate &target_pose) {
     abb_group_ptr->setStartStateToCurrentState();
     geometry_msgs::Pose start_pose;
     start_pose = abb_group_ptr->getCurrentPose().pose;
     std::cout << "Start Pose for Planning is: \n" << start_pose << std::endl;
 
     geometry_msgs::Pose target_p;
-    target_p.position.x = target_pose[0];
-    target_p.position.y = target_pose[1];
-    target_p.position.z = target_pose[2];
+    target_p.position.x = target_pose.getX();
+    target_p.position.y = target_pose.getY();
+    target_p.position.z = target_pose.getZ();
     target_p.orientation.x = 0.5;
     target_p.orientation.y = 0.5;
     target_p.orientation.z = 0.5;
@@ -218,10 +222,8 @@ bool Pick_Place::moveToPickPose(std::vector<double> target_pose) {
     return success;
 }
 
-void Pick_Place::pickBox(std::vector<double> &box_position) {
-    std::vector<double> box_pick_pose = calculateBoxPickPose(box_position);
-    double clearance = 0.10;
-    box_pick_pose[0] = box_pick_pose[0] - clearance;
+void Pick_Place::pickBox(Box box) {
+    Coordinate box_pick_pose = calculateBoxPickPose(box);
 
     if (!moveToPickPose(box_pick_pose)) {
         std::cout << "Unable to Plan for the Pre-Pick Position \n";
@@ -230,7 +232,7 @@ void Pick_Place::pickBox(std::vector<double> &box_position) {
     }
 }
 
-bool Pick_Place::moveToPlacePose(std::vector<double> &place_target_pose) {
+bool Pick_Place::moveToPlacePose(const Coordinate& place_target_pose) {
 
     abb_group_ptr->setStartStateToCurrentState();
     geometry_msgs::Pose start_pose;
@@ -240,9 +242,9 @@ bool Pick_Place::moveToPlacePose(std::vector<double> &place_target_pose) {
     geometry_msgs::PoseStamped place_target_p;
     place_target_p.header.frame_id = "base_link";
 
-    place_target_p.pose.position.x = place_target_pose[0] + 0.2;
-    place_target_p.pose.position.y = place_target_pose[1];
-    place_target_p.pose.position.z = place_target_pose[2];
+    place_target_p.pose.position.x = place_target_pose.getX();
+    place_target_p.pose.position.y = place_target_pose.getY();
+    place_target_p.pose.position.z = place_target_pose.getZ();
 
     place_target_p.pose.orientation.x = 1.0;
     place_target_p.pose.orientation.y = 0.0;
@@ -269,12 +271,10 @@ bool Pick_Place::moveToPlacePose(std::vector<double> &place_target_pose) {
     return success;
 }
 
-void Pick_Place::placeBox(std::vector<double> &container_position) {
-    std::vector<double> box_pre_place_pose = container_position;
-    double clearance = 0.2;
-    box_pre_place_pose[2] = box_pre_place_pose[2] + clearance;
+void Pick_Place::placeBox(Coordinate center_position) {
 
-    if (!moveToPlacePose(box_pre_place_pose)) {
+    if (!moveToPlacePose(Coordinate(center_position.getX()+DEPTH_OFFSET_FOR_PLACE, center_position.getY(),
+                                        center_position.getZ() + HEIGHT_CLEARANCE_FOR_PLACE))) {
         std::cout << "UNABLE TO PLAN FOR PLACE POSITION \n";
         std::cout << "ABORTING PLACE OPERATION \n";
         return;
@@ -289,26 +289,26 @@ void Pick_Place::updatePlanningScene() {
     planning_scene_publisher.publish(planning_scene);
 }
 
-void Pick_Place::attachCollisionObjects(std::string &object_id) {
+void Pick_Place::attachCollisionObjects(std::string object_id) {
 
     ROS_INFO("Attaching box to the suction gripper");
     moveit_msgs::AttachedCollisionObject attached_object;
     attached_object.link_name = "suction_cup_end_effector";
     attached_object.object.header.frame_id = abb_group_ptr->getPlanningFrame();
-    attached_object.object.id = object_id;
+    attached_object.object.id = std::move(object_id);
     attached_object.touch_links = std::vector<std::string>{"suction_cup_end_effector", "tool0"};
 
     planning_scene_interface.applyAttachedCollisionObject(attached_object);
     updatePlanningScene();
 }
 
-void Pick_Place::detachCollisionObjects(std::string &object_id) {
+void Pick_Place::detachCollisionObjects(std::string object_id) {
     ROS_INFO("Detaching box from the suction gripper");
     moveit_msgs::AttachedCollisionObject detach_object;
     detach_object.object.operation = detach_object.object.REMOVE;
     detach_object.link_name = "suction_cup_end_effector";
     detach_object.object.header.frame_id = abb_group_ptr->getPlanningFrame();
-    detach_object.object.id = object_id;
+    detach_object.object.id = std::move(object_id);
 
     planning_scene_interface.applyAttachedCollisionObject(detach_object);
     updatePlanningScene();
@@ -327,16 +327,31 @@ void Pick_Place::homePosition() {
     updatePlanningScene();
 }
 
-void Pick_Place::run() {
-    std::vector<std::string> box_ids = boxes_id;
-    for (size_t i = 5; i >= 3; i--) {
 
-        pickBox(boxes_position[i]);
-        ros::Duration(1).sleep();
-        attachCollisionObjects(box_ids[i]);
-        placeBox(containers_position[i - 3]);
-        detachCollisionObjects(box_ids[i]);
+void Pick_Place::run() {
+    std::vector<Box> boxes = scanBoxes();
+    auto comp = [](Box a, Box b) {
+        if (a.getCenterCoordinate().getZ() == b.getCenterCoordinate().getZ()) {
+            return a.getCenterCoordinate().getY() <= b.getCenterCoordinate().getY();
+        }
+        return a.getCenterCoordinate().getZ() <= b.getCenterCoordinate().getZ();
+    };
+    std::priority_queue<Box, std::vector<Box>, decltype(comp)>
+            pq(comp);
+    for (auto box:boxes) {
+        pq.push(box);
     }
+
+    for (auto & container : scanContainers()) {
+        Box box = pq.top();
+        pickBox(box);
+        pq.pop();
+        ros::Duration(1).sleep();
+        attachCollisionObjects(box.getUniqueId());
+        placeBox(container.getCenterCoordinate());
+        detachCollisionObjects(box.getUniqueId());
+    }
+
     std::cout << "OPERATION TERMINATED SUCCESSFULLY" << std::endl;
     homePosition();
 }
@@ -352,7 +367,6 @@ void Pick_Place::printVector(std::vector<std::string> &input) {
     );
     std::cout << "]" << std::endl;
 }
-
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "logistic_case_picking");

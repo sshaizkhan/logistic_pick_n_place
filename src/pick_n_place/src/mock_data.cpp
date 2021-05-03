@@ -23,7 +23,7 @@ std::vector<Box> getMockBoxes()
     mock_boxes.emplace_back(BOX_LENGTH, BOX_HEIGHT, BOX_DEPTH, Coordinate(DISTANCE_ROBOT_TO_BOXES, 0.26, 1.17 ));
     mock_boxes.emplace_back(BOX_LENGTH, BOX_HEIGHT, BOX_DEPTH, Coordinate(DISTANCE_ROBOT_TO_BOXES, 0, 1.67 ));
     mock_boxes.emplace_back(BOX_LENGTH, BOX_HEIGHT, BOX_DEPTH, Coordinate(DISTANCE_ROBOT_TO_BOXES, 0.0, 0.67 ));
-    mock_boxes.emplace_back(BOX_LENGTH, BOX_HEIGHT, BOX_DEPTH, Coordinate(DISTANCE_ROBOT_TO_BOXES, -0.25, 1.17 ));
+    mock_boxes.emplace_back(BOX_LENGTH, BOX_HEIGHT, BOX_DEPTH, Coordinate(DISTANCE_ROBOT_TO_BOXES, -0.26, 1.17 ));
 
     return mock_boxes;
 }
