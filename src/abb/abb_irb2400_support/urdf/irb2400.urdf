@@ -9,11 +9,11 @@
   <!-- Actual colors -->
   <!-- NCS 2070-Y60R orange, standard robot color 1974 - May 2014 -->
   <!-- RAL 7035 light grey (abb graphite white), standard robot color May 2014 - current -->
-  <!-- RAL 9003 signal white (abb white), cleanroom robot color -->
+  <!-- RAL 9003 signal white (abb white), clean room robot color -->
   <!-- RAL 7032 pebble gray, controller -->
   <!-- RAL 7012 basalt gray (abb dark gray) , robot primer -->
   <!-- RAL 7021 black gray (abb black) , robot with dark link color -->
-  <!-- Other robot colours availble, but not limited too. -->
+  <!-- Other robot colours available, but not limited too. -->
   <!-- RAL 3001 signal red -->
   <!-- RAL 3002 carmine red -->
   <!-- RAL 5002 ultramarine blue -->
@@ -165,6 +165,124 @@
   </link>
   <link name="tool0"/>
   <!-- end of link list -->
+
+<!--Dummy link-->
+  <link name="dummy"/>
+
+<!--  Start of Mobile Base Links-->
+  <!--Chassis-->
+  <link name = "chassis">
+    <visual>
+      <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/mobile_base.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/mobile_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--    Right Back Wheel-->
+  <link name = "right_back_wheel">
+    <visual>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/wheel_mobile_base.dae" />
+      </geometry>
+      <material name = "Black">
+        <color rgba = "0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/wheel_mobile_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--    Right Front Wheel-->
+  <link name = "right_front_wheel">
+    <visual>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/wheel_mobile_base.dae" />
+      </geometry>
+      <material name = "Black">
+        <color rgba = "0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/wheel_mobile_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--   Left Back Wheel-->
+  <link name = "left_back_wheel">
+    <visual>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/wheel_mobile_base.dae" />
+      </geometry>
+      <material name = "Black">
+        <color rgba = "0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/wheel_mobile_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--    Left Front Wheel-->
+  <link name = "left_front_wheel">
+    <visual>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/wheel_mobile_base.dae" />
+      </geometry>
+      <material name = "Black">
+        <color rgba = "0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/wheel_mobile_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+<!--End of Mobile Base links-->
+
+<!--  Suction Cup Start-->
+  <link name = "suction_cup_end_effector">
+    <visual>
+      <origin rpy="0 0 0" xyz ="0 0 0.0001"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/suction_cup.dae" />
+      </geometry>
+      <material name = "red">
+        <color rgba = "0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz ="0 0 0"/>
+      <geometry>
+        <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/suction_cup.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- Suction Cup End -->
+
   <!-- joint list -->
   <joint name="joint_1" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -214,12 +332,65 @@
     <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
   </joint>
   <!-- end of joint list -->
-  <!-- ROS base_link to ABB World Coordinates transform -->
-  <link name="base"/>
-  <joint name="base_link-base" type="fixed">
+
+  <!-- Start of Mobile base joints -->
+  <joint name = "left_front_wheel_joint" type = "continuous">
+    <parent link = "chassis"/>
+    <child link = "right_back_wheel"/>
+    <origin rpy = '0 0 0' xyz="-0.535 -0.76 -0.35"/>
+    <axis xyz = "0 1 0"/>
+    <limit effort = "100" velocity = "100"/>
+    <dynamics damping = "0.0" friction = "0.0"/>
+  </joint>
+
+  <joint name = "left_back_wheel_joint" type = "continuous">
+    <parent link = "chassis"/>
+    <child link = "right_front_wheel"/>
+    <origin rpy = '0 0 0' xyz="0.465 -0.76 -0.35"/>
+    <axis xyz = "0 1 0"/>
+    <limit effort = "100" velocity = "100"/>
+    <dynamics damping = "0.0" friction = "0.0"/>
+  </joint>
+
+  <joint name = "right_front_wheel_joint" type = "continuous">
+    <parent link = "chassis"/>
+    <child link = "left_back_wheel"/>
+    <origin xyz="-0.535 0.64 -0.35" rpy = "0 0 0" />
+    <axis xyz = "0 1 0"/>
+    <limit effort = "100" velocity = "100"/>
+    <dynamics damping = "0.0" friction = "0.0"/>
+  </joint>
+
+  <joint name = "right_back_wheel_joint" type = "continuous">
+    <parent link = "chassis"/>
+    <child link = "left_front_wheel"/>
+    <origin rpy = '0 0 0' xyz="0.465 0.64 -0.35"/>
+    <axis xyz = "0 1 0"/>
+    <limit effort = "100" velocity = "100"/>
+    <dynamics damping = "0.0" friction = "0.0"/>
+  </joint>
+
+<!--  End of Mobile base joints-->
+
+<!-- Suction Cup joint -->
+  <joint name="suction_to_tool0" type="fixed">
+    <parent link="tool0"/>
+    <child link="suction_cup_end_effector"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="base"/>
+  </joint>
+<!--  End-->
+
+  <joint name="dummy_joint" type="fixed">
+    <parent link="dummy"/>
+    <child link="chassis"/>
+    <origin xyz="0.0 0.0 0.43" rpy="0 0 0" />
+  </joint>
+
+<!--  ABB robots connection to chassis base-->
+  <joint name="chassis_to_base_link" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.2 0 0"/>
+    <parent link="chassis"/>
+    <child link="base_link"/>
   </joint>
 </robot>
 

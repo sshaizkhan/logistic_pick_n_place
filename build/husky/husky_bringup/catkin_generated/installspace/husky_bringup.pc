@@ -1,0 +1,8 @@
+prefix=/home/shahwaz/Documents/dev-shahwaz-khan/install
+
+Name: husky_bringup
+Description: Description of husky_bringup
+Version: 0.4.8
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

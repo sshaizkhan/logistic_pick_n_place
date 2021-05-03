@@ -116,6 +116,25 @@
         </collision>
     </link>
     <link name="${prefix}tool0"/>
+
+<!--   Suction Cup   -->
+    <link name="${prefix}suction_cup_end_effector">
+        <visual>
+            <origin xyz="0 0 0.001" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/suction_cup.dae" />
+            </geometry>
+            <xacro:material_abb_leaf_green />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/suction_cup.stl" />
+            </geometry>
+            <xacro:material_abb_yellow />
+        </collision>
+    </link>
+
     <!-- end of link list -->
 
     <!-- joint list -->
@@ -166,14 +185,112 @@
         <child link="${prefix}tool0"/>
         <origin xyz="0 0 0" rpy="0 1.57079632679 0"/>
     </joint>
+    <joint name="${prefix}tool0-suction_cup" type="fixed">
+        <parent link="${prefix}tool0"/>
+        <child link="${prefix}suction_cup_end_effector"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
     <!-- end of joint list -->
 
-    <!-- ROS base_link to ABB World Coordinates transform -->
-    <link name="${prefix}base" />
-    <joint name="${prefix}base_link-base" type="fixed">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <parent link="${prefix}base_link"/>
-        <child link="${prefix}base"/>
+
+
+<!--///////////////////////////////////////////////////////////////////////-->
+    <!--    Transmission Block-->
+    <xacro:macro name="Transmission_Block" params="joint_name">
+        <transmission name="${joint_name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint_name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${joint_name}_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!--    //////////////////////////////////////////////////////////////////////-->
+    <!--Dummy link-->
+    <link name="dummy"/>
+    <!--    Chassis-->
+    <link name = "chassis">
+        <visual>
+            <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+            <geometry>
+                <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/mobile_base.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy = "3.14 0 0" xyz = "0 0 0"/>
+            <geometry>
+                <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/mobile_base.stl" />            </geometry>
+        </collision>
+    </link>
+
+    <joint name="dummy_joint" type="fixed">
+        <parent link="dummy"/>
+        <child link="chassis"/>
+        <origin xyz="0.0 0.0 0.43" rpy="0 0 0" />
     </joint>
+
+    <!--    Wheels-->
+    <xacro:macro name="wheel" params="prefix suffix X Y Z">
+        <link name="${prefix}_${suffix}_wheel">
+            <visual>
+                <origin rpy="1.57 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://abb_irb2400_support/meshes/irb2400/visual/wheel_mobile_base.dae" />
+                </geometry>
+                <material name="Black"/>
+            </visual>
+            <collision>
+                <origin rpy="1.57 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://abb_irb2400_support/meshes/irb2400/collision/wheel_mobile_base.stl" />
+                </geometry>
+            </collision>
+        </link>>
+
+        <joint name="${prefix}_${suffix}_wheel_joint" type="continuous">
+            <parent link="chassis"/>
+            <child link="${prefix}_${suffix}_wheel"/>
+            <origin xyz="${X} ${Y} ${Z}" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+            <limit effort = "100" velocity = "100"/>
+            <dynamics damping = "0.0" friction = "0.0"/>
+        </joint>
+
+
+
+        <transmission name="${prefix}_${suffix}_wheel_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="${prefix}_${suffix}_wheel_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="${prefix}_${suffix}_wheel_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+    </xacro:macro>
+
+    <xacro:wheel prefix="left" suffix="back" X="0.465" Y="-0.76" Z="-0.35"/>
+    <xacro:wheel prefix="left" suffix="front" X="-0.535" Y="-0.76" Z="-0.35"/>
+    <xacro:wheel prefix="right" suffix="back" X="0.465" Y="0.64" Z="-0.35"/>
+    <xacro:wheel prefix="right" suffix="front" X="-0.535" Y="0.64" Z="-0.35"/>
+
+    <!-- ROS base_link to mobile base Coordinates transform -->
+    <joint name="chassis_to_base_link" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="chassis"/>
+        <child link="${prefix}base_link"/>
+    </joint>
+
 </xacro:macro>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control"  filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
+        </plugin>
+    </gazebo>
 </robot>

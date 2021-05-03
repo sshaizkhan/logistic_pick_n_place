@@ -11,5 +11,6 @@ export CMAKE_PREFIX_PATH="/home/shahwaz/Documents/dev-shahwaz-khan/devel:$CMAKE_
 export LD_LIBRARY_PATH="/home/shahwaz/Documents/dev-shahwaz-khan/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/shahwaz/Documents/dev-shahwaz-khan/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/shahwaz/Documents/dev-shahwaz-khan/build'
+export PYTHONPATH="/home/shahwaz/Documents/dev-shahwaz-khan/devel/lib/python2.7/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/shahwaz/Documents/dev-shahwaz-khan/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/shahwaz/Documents/dev-shahwaz-khan/src:$ROS_PACKAGE_PATH"

@@ -1,0 +1,44 @@
+<launch>
+
+    <arg name="model" default="$(find mobilebot_description)/urdf/differential_drive.urdf.xacro"/>
+<!--    <arg name="model" default="$(find mobilebot_description)/urdf/differential_abb_robot.urdf.xacro"/>-->
+
+    <arg name="rvizconfig" default="$(find mobilebot_launch)/config/robot_urdf.rviz"/>
+
+<!--    Launch gazebo launch file-->
+    <include file="$(find mobilebot_launch)/launch/gazebo.launch">
+        <arg name="model" value="$(arg model)"/>
+    </include>
+
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
+
+<!--    Load joint state controller configuration from YAML file to parameter server-->
+
+    <rosparam file="$(find mobilebot_control)/config/joint_states.yaml"/>
+    <rosparam file="$(find mobilebot_control)/config/diff_drive.yaml"/>
+
+<!--    Load the controllers-->
+    <node name="robot_controller_spawner" pkg="controller_manager" type="spawner"
+          respawn="true" output="screen"
+          args="/Diff_Drive/joint_state_controller
+                /Diff_Drive/diff_drive_controller"/>
+
+
+<!--    Convert joint states to TF transforms for rviz-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          respawn="false" output="screen">
+    </node>
+
+    <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+        <param name="default_topic" value="/Diff_Drive/diff_drive_controller/cmd_vel"/>
+    </node>
+
+
+
+
+
+
+
+
+</launch>
