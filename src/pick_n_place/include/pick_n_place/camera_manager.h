@@ -10,15 +10,8 @@
 #include "pick_n_place/mock_data.h"
 #include "vector"
 
+std::vector<Box> scanBoxes();
 
-class CameraManager {
-
-public:
-    static std::vector<Box> scanBoxes();
-
-    static std::vector<Box> scanContainers();
-
-};
-
+std::vector<Box> scanContainers();
 
 #endif //DEV_SHAHWAZ_KHAN_CAMERA_MANAGER_H

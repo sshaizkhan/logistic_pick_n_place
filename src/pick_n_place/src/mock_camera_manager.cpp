@@ -5,12 +5,12 @@
 #include "pick_n_place/camera_manager.h"
 
 
-std::vector<Box> CameraManager::scanBoxes() {
+std::vector<Box> scanBoxes() {
 
     return getMockBoxes();
 }
 
-std::vector<Box> CameraManager::scanContainers() {
+std::vector<Box> scanContainers() {
 
     return getMockContainer();
 }
