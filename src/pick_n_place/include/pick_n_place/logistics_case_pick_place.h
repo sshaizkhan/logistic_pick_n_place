@@ -43,8 +43,10 @@
 class FailedToExecutePickPlate : public std::exception {
 public:
     FailedToExecutePickPlate(std::string message) noexcept;
+
     ~FailedToExecutePickPlate() override = default;
-    const char* what() const noexcept override;
+
+    const char *what() const noexcept override;
 
 private:
     std::string m_message;
@@ -67,6 +69,7 @@ private:
     Box pickMatchingQrCodeContainer(const Box &box, std::map<int, Box> &container_map);
 
     std::map<int, Box> buildContainerQRCodeMap(const std::vector<Box> &containers);
+
     void addTable(std::string &object_id, double x, double y, double z);
 
     void addBoxes(Box &box);
@@ -83,8 +86,10 @@ private:
 
     void updatePlanningScene();
 
-    int fetchBoxQRCodeWithRetry(const Box& box,int attempts);
-    int fetchContainerQRCodeWithRetry(const Box& box,int attempts);
+    int fetchBoxQRCodeWithRetry(const Box &box, int attempts);
+
+    int fetchContainerQRCodeWithRetry(const Box &box, int attempts);
+
     bool moveToPickPose(const Coordinate &target_position);
 
     bool moveToPlacePose(const Coordinate &target_position);
@@ -93,17 +98,21 @@ private:
 
     void detachCollisionObjects(std::string object_id);
 
-    void pickBox(const Box& box);
+    void pickBox(const Box &box);
 
     void placeBox(Coordinate coordinate);
 
     static void printVector(std::vector<std::string> &input);
 
     void moveToHomePosition();
+
 public:
     virtual ~Pick_Place();
+
     Pick_Place();
+
     void spawnEnvironment();
+
     void run();
 };
 
