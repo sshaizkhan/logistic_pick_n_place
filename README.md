@@ -5,6 +5,7 @@
   <a href="https://www.shutterstock.com/image-vector/collect-pick-order-icon-package-box-1879519894">
     <img src="src/resources/pick_place_logo.jpg" alt="Logo" width="80" height="80">
   </a>
+</p>
 
 <h3 align="center">Logistic Case Picking Operation</h3>
 
@@ -155,30 +156,32 @@ working of the differential wheel drive can also be seen in the video.
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1e1KW6Z8X4mplqPg4JuSg7ZqsprAp57db/view?usp=sharing">
-    <img src="src/resources/rviz.png" alt="Logo" width="800" height="650">
+    <img src="src/resources/rviz.png" alt="Logo" width="1200" height="650">
   </a>
+</p>
 
-###
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1Tj8ectDukG06Gy1YywKBGDEnCmVcy4gh/view?usp=sharing">
-    <img src="src/resources/gazebo.png" alt="Logo" width="800" height="650">
+    <img src="src/resources/gazebo.png" alt="Logo" width="1200" height="650">
   </a>
+</p>
 
 ### Video
 The working of the differential wheel drive can be visualized on both RViz and Gazebo from the video below:
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1o9UygzjGgmbebV2kQ9u0eAbw7pBC-kX6/view?usp=sharing">
-    <img src="src/resources/differential_wheel_drive.mp4" alt="Logo" width="1000" height="850">
+    <img src="src/resources/rviz_gazebo.png" alt="Logo" width="1200" height="650">
   </a>
+</p>
 
+###
 
 ### ABB IRB2600 Robot
 
 The ABB robot is a 6 DOF Industrial arm its main task to pick the boxes that can range from 10 -15 kg and place it onto
 the corresponding containers. This robot has a payload capacity of 20kg and thus can easily lift the boxes.
-
 
 
 <!-- ROADMAP -->
@@ -198,7 +201,12 @@ Check out the video to visualize the complete pick and place operation performed
 mobile base. In the video, it can observed that the robot will successfully complete the pick and place operation for
 three robots and then will move to the home position.
 
-![Packaging video](https://drive.google.com/file/d/1o9UygzjGgmbebV2kQ9u0eAbw7pBC-kX6/view?usp=sharing)
+<p align="center">
+  <a href="https://drive.google.com/file/d/1YzCz7j_ZIH7FtG7X7htyk_iPgeQAd5mm/view?usp=sharing">
+    <img src="src/resources/robot_with_environment.png" alt="Logo" width="1200" height="650">
+  </a>
+</p>
+
 
 <!-- ASSUMPTIONS -->
 
