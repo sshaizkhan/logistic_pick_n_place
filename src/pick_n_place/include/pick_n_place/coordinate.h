@@ -5,6 +5,7 @@
 #define DEV_SHAHWAZ_KHAN_COORDINATE_H
 
 
+#include "bits/stdc++.h"
 class Coordinate {
 
 private:
@@ -22,6 +23,6 @@ public:
     double getZ() const;
 
 };
-
+std::ostream& operator<<(std::ostream& os, const Coordinate& obj);
 
 #endif //DEV_SHAHWAZ_KHAN_COORDINATE_H

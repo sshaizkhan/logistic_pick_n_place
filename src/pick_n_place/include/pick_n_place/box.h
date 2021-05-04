@@ -15,6 +15,7 @@ private:
     Coordinate center_coordinate;
 
 public:
+    virtual ~Box();
 
     Box(double length, double width, double depth, const Coordinate &centerCoordinate);
 
@@ -42,8 +43,8 @@ public:
     /**
      * Constructs the Id using Box center coordinates and returns it.
      */
-    std::string getUniqueId();
-
+    std::string getUniqueId() const;
 };
+std::ostream& operator<<(std::ostream& os, const Box& obj);
 
 #endif //DEV_SHAHWAZ_KHAN_BOX_H

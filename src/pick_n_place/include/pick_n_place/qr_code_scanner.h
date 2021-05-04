@@ -5,11 +5,25 @@
 #define DEV_SHAHWAZ_KHAN_BOX_QR_CODE_DETECTION_H
 
 #include "pick_n_place/box.h"
+class FailedToScanQRCode : public std::exception {
+public:
+    FailedToScanQRCode(std::string message) noexcept;
+    ~FailedToScanQRCode() override = default;
+    const char* what() const noexcept override;
+
+private:
+    std::string m_message;
+};
 
 class QRCodeScanner {
 private:
     std::queue<int> non_used_container_qr_codes;
     std::queue<int> non_used_box_qr_codes;
+    void clearQueue(std::queue<int> queue);
+public:
+    virtual ~QRCodeScanner();
+
+private:
     int maximum_qr_code_till_now;
 
     /**

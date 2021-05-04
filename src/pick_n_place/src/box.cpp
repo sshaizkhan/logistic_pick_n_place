@@ -39,13 +39,28 @@ Coordinate Box::getBottomRightCoordinate() const {
             center_coordinate.getZ() + height / 2};
 }
 
-std::string Box::getUniqueId() {
+std::string Box::getUniqueId() const{
 
     return std::to_string(
             center_coordinate.getZ() * MAX_COORDINATE_LIMIT + center_coordinate.getY() * MAX_COORDINATE_LIMIT / 10
             + center_coordinate.getX() * MAX_COORDINATE_LIMIT / 100);
 }
 
+Box::~Box() {;
+
+}
+
+std::ostream& operator<<(std::ostream& stream,
+                         const Box& obj) {
+    stream<<"{ ";
+    stream<<"id: "<<obj.getUniqueId();
+    stream<<", length: "<<obj.getLength();
+    stream<<", depth: "<<obj.getDepth();
+    stream<<", height: "<<obj.getHeight();
+    stream<<", center_coordinates: "<<obj.getCenterCoordinate();
+    stream<<"} "<<std::endl;
+    return stream;
+}
 
 
 

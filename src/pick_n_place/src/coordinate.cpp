@@ -17,3 +17,13 @@ double Coordinate::getY() const {
 double Coordinate::getZ() const {
     return z;
 }
+
+std::ostream& operator<<(std::ostream& stream,
+                         const Coordinate& obj) {
+    stream<<"{ ";
+    stream<<"x: "<<obj.getX();
+    stream<<", y: "<<obj.getY();
+    stream<<", z: "<<obj.getZ();
+    stream<<" }"<<std::endl;
+    return stream;
+}
