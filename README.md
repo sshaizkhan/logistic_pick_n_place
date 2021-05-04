@@ -266,8 +266,9 @@ While designing the system and visualizing the pick and place operation, followi
    robot do not follow the planning path or sometime it does and stops in halfway through. One solution to that is to
    manufally update the planning scene topic regularly between two available topics on RViz:
 
-        -abb_robot/move_group/monitored_planning_scene
-       - /abb_robot/planning_scene
+         -/abb_robot/move_group/monitored_planning_scene
+   
+         -/abb_robot/planning_scene
 
 <!-- MEMORY USAGE -->
 
