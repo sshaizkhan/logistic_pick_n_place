@@ -1,6 +1,6 @@
 
 <!-- PROJECT LOGO -->
-<br />
+
 <p align="center">
   <a href="https://www.shutterstock.com/image-vector/collect-pick-order-icon-package-box-1879519894">
     <img src="src/resources/pick_place_logo.jpg" alt="Logo" width="80" height="80">
@@ -156,23 +156,26 @@ working of the differential wheel drive can also be seen in the video.
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1e1KW6Z8X4mplqPg4JuSg7ZqsprAp57db/view?usp=sharing">
-    <img src="src/resources/rviz.png" alt="Logo" width="1200" height="650">
+    <img src="src/resources/rviz.png" alt="Logo" width="1000" height="560">
   </a>
 </p>
 
+##
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1Tj8ectDukG06Gy1YywKBGDEnCmVcy4gh/view?usp=sharing">
-    <img src="src/resources/gazebo.png" alt="Logo" width="1200" height="650">
+    <img src="src/resources/gazebo.png" alt="Logo" width="1000" height="560">
   </a>
 </p>
+
+##
 
 ### Video
 The working of the differential wheel drive can be visualized on both RViz and Gazebo from the video below:
 
 <p align="center">
   <a href="https://drive.google.com/file/d/1o9UygzjGgmbebV2kQ9u0eAbw7pBC-kX6/view?usp=sharing">
-    <img src="src/resources/rviz_gazebo.png" alt="Logo" width="1200" height="650">
+    <img src="src/resources/rviz_gazebo.png" alt="Logo" width="1000" height="560">
   </a>
 </p>
 
@@ -202,10 +205,12 @@ mobile base. In the video, it can observed that the robot will successfully comp
 three robots and then will move to the home position.
 
 <p align="center">
-  <a href="https://drive.google.com/file/d/1YzCz7j_ZIH7FtG7X7htyk_iPgeQAd5mm/view?usp=sharing">
-    <img src="src/resources/robot_with_environment.png" alt="Logo" width="1200" height="650">
-  </a>
+  <a href="https://drive.google.com/file/d/1YzCz7j_ZIH7FtG7X7htyk_iPgeQAd5mm/view?usp=sharing
+" target="_blank"><img src="src/resources/robot_with_environment.png"
+alt="Robot Environment" width="1000" height="560"/></a>
+
 </p>
+
 
 
 <!-- ASSUMPTIONS -->
