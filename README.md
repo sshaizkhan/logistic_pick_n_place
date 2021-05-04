@@ -76,10 +76,14 @@ The relevant README files for the above two deliverables are :
 
 The project is made using the following framework and hardware:
 *[ROS](https://www.ros.org/)
-*[C++](https://www.cplusplus.com/)
-*[MoveIt](https://moveit.ros.org/)
-*[ABB Support Package](https://github.com/ros-industrial/abb.git)
-*[Mobile Base](src/mobile_bot)
+
+* [C++](https://www.cplusplus.com/)
+
+* [MoveIt](https://moveit.ros.org/)
+
+* [ABB Support Package](https://github.com/ros-industrial/abb.git)
+
+* [Mobile Base](src/mobile_bot)
 
 <!-- GETTING STARTED -->
 
@@ -89,13 +93,13 @@ To get started with the project, you need to have the following prerequisites in
 
 ### Prerequisites
 
-### ROS
+* ROS
 
 The ROS (Robot Operating System) is a free software, sourced and maintained by
 [Open Robotics](https://www.openrobotics.org/). You must have ROS in order to run this project on your system Follow all
-the instructions to [install ROS Melodic](http://wiki.ros.org/melodic/Installation), including calls to [rosdep]().
+the instructions to [install ROS Melodic](http://wiki.ros.org/melodic/Installation), including calls to `rosdep`.
 
-### MoveIt
+* MoveIt
 
 MoveIt is an open source project that is the result of the combined efforts of a large international community and
 multiple organizations. To Install on Ubuntu 18.04:
@@ -323,6 +327,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - [Shahwaz Khan](shahwazk@usc.edu)
+Your Name - [Shahwaz Khan](https://github.com/sshaizkhan)
 
 Project Link:  [Logistic Case Picking](https://shahwazk@bitbucket.org/telexistence/dev-shahwaz-khan.git)
