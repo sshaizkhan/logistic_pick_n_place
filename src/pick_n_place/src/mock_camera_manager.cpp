@@ -1,9 +1,8 @@
-//
-// Created by shahwaz on 5/3/21.
-//
 
+/**
+ * Mock Camera manager which returns predefined Boxes and Containers.
+ */
 #include "pick_n_place/camera_manager.h"
-
 
 std::vector<Box> scanBoxes() {
 

@@ -28,11 +28,11 @@ public:
     /* Dimension along X-axis*/
     double getDepth() const;
 
-    const Coordinate &getCenterCoordinate() const;
+    const Coordinate& getCenterCoordinate() const;
 
-    Coordinate getTopLeftCoordinate();
+    Coordinate getTopLeftCoordinate() const;
 
-    Coordinate getBottomRightCoordinate();
+    Coordinate getBottomRightCoordinate() const;
 
     std::string getUniqueId();
 

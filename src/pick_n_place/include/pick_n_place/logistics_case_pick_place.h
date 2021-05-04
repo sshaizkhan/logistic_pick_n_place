@@ -43,48 +43,22 @@
 class Pick_Place {
 private:
     /*data*/
+    QRCodeScanner qrCodeScanner;
 
-public:
+    Box pickMatchingQrCodeContainer(const Box &box, std::map<int, Box> &container_map);
+
+    std::map<int, Box> buildContainerQRCodeMap(const std::vector<Box> &containers);
+
 //   Initialise ROS parameters
     ros::NodeHandle nodeHandle;
-
-//    Setting Robot string parameters
-    std::string PLANNING_GROUP = "abb_arm";
-    std::string ROBOT_DESCRIPTION = "abb_robot/robot_description";
-
-//    Moveit Planning Interface
+    //    Moveit Planning Interface
     moveit::planning_interface::MoveGroupInterfacePtr abb_group_ptr;
-
-//    Initializing Move Group Parameters
-    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-    const robot_state::JointModelGroup *joint_model_group{};
-    moveit::planning_interface::MoveGroupInterface::Plan abb_cartesian_plan;
-    moveit::planning_interface::MoveGroupInterface::Plan abb_goal_plan;
-
-
-    planning_scene_monitor::PlanningSceneMonitorPtr planning_scene_monitor;
-
-//    Moveit msgs
-    moveit_msgs::OrientationConstraint goal_pose_constraint;
-
-//    Std Robot vector variables
-    std::vector<std::string> joint_names;
-    std::vector<std::string> link_names;
-
-    std::string robot_home_position = "home";
-
-//    Publishers and Subscribers
-    ros::Publisher planning_scene_publisher;
-
-//    Operation performing functions
-
-    Pick_Place();
 
     void addTable(std::string &object_id, double x, double y, double z);
 
-    void addBoxes(Box& box);
+    void addBoxes(Box &box);
 
-    void addContainers(Box& container);
+    void addContainers(Box &container);
 
     void spawnTables();
 
@@ -92,13 +66,13 @@ public:
 
     void spawnContainers();
 
-    static Coordinate calculateBoxPickPose(const Box& box);
+    static Coordinate calculateBoxPickPose(const Box &box);
 
     void updatePlanningScene();
 
-    bool moveToPickPose(const Coordinate& target_position);
+    bool moveToPickPose(const Coordinate &target_position);
 
-    bool moveToPlacePose(const Coordinate& target_position);
+    bool moveToPlacePose(const Coordinate &target_position);
 
     void attachCollisionObjects(std::string object_id);
 
@@ -108,12 +82,24 @@ public:
 
     void placeBox(Coordinate coordinate);
 
-    static void printVector(std::vector<std::string>& input);
-
-    void spawnEnvironment();
+    static void printVector(std::vector<std::string> &input);
 
     void homePosition();
 
+    //    Initializing Move Group Parameters
+    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+    moveit::planning_interface::MoveGroupInterface::Plan abb_cartesian_plan;
+    moveit::planning_interface::MoveGroupInterface::Plan abb_goal_plan;
+
+
+    planning_scene_monitor::PlanningSceneMonitorPtr planning_scene_monitor;
+
+
+//    Publishers and Subscribers
+    ros::Publisher planning_scene_publisher;
+public:
+    Pick_Place();
+    void spawnEnvironment();
     void run();
 
 };

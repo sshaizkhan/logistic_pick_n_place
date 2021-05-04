@@ -1,30 +1,52 @@
-//
-// Created by shahwaz on 5/3/21.
-//
-
+/**
+ * Mock implementation of QRCodeScanner which ensures that each QR code assigned to
+ * container has a equivalent match in the Box and vice-versa.
+ */
 #include "pick_n_place/qr_code_detector.h"
 
-int box_id;
-int container_id;
-int getQRCodeByBoxEdgePoints(Coordinate top_left_coordinate, Coordinate right_bottom_coordinate )
-{
-    return 0;
+
+QRCodeScanner::QRCodeScanner() {
+    while(!non_used_container_qr_codes.empty()){
+        non_used_container_qr_codes.pop();
+    }
+    while(!non_used_box_qr_codes.empty()){
+        non_used_box_qr_codes.pop();
+    }
+    maximum_qr_code_till_now=0;
 }
 
-int getQRCodeByContainerEdgePoints(Coordinate top_left_coordinate, Coordinate right_bottom_coordinate )
+int QRCodeScanner::getQRCodeByScanningWithinBoxEdgePoints(const Coordinate& top_left_coordinate, const Coordinate& right_bottom_coordinate )
 {
-    return 0;
+    if(!non_used_container_qr_codes.empty()){
+        int qr_code=non_used_container_qr_codes.front();
+        non_used_container_qr_codes.pop();
+        return qr_code;
+    }
+    maximum_qr_code_till_now+=1;
+    non_used_box_qr_codes.push(maximum_qr_code_till_now);
+    return maximum_qr_code_till_now;
 }
 
-
-int getQRCodeBox(Box& box)
+int QRCodeScanner::getQRCodeByScanningWithinContainerEdgePoints(const Coordinate& top_left_coordinate, const Coordinate& right_bottom_coordinate )
 {
-    return getQRCodeByBoxEdgePoints(box.getTopLeftCoordinate(), box.getBottomRightCoordinate());
+    if(!non_used_box_qr_codes.empty()){
+        int qr_code=non_used_box_qr_codes.front();
+        non_used_box_qr_codes.pop();
+        return qr_code;
+    }
+    maximum_qr_code_till_now+=1;
+    non_used_container_qr_codes.push(maximum_qr_code_till_now);
+    return maximum_qr_code_till_now;
 }
 
-int getQRContainer(Box& container)
+int  QRCodeScanner::fetchBoxQRCode(const Box& box)
 {
-    return getQRCodeByContainerEdgePoints(container.getTopLeftCoordinate(), container.getBottomRightCoordinate());
+    return getQRCodeByScanningWithinBoxEdgePoints(box.getTopLeftCoordinate(), box.getBottomRightCoordinate());
+}
+
+int  QRCodeScanner::fetchContainerQRCode(const Box& container)
+{
+    return getQRCodeByScanningWithinContainerEdgePoints(container.getTopLeftCoordinate(), container.getBottomRightCoordinate());
 
 }
 
