@@ -14,6 +14,7 @@ namespace Constants {
     const std::string PLANNING_GROUP = "abb_arm";
     const std::string ROBOT_DESCRIPTION = "abb_robot/robot_description";
     const int RETRYABLE_ATTEMPTS_FOR_QR_CODE_SCANNER = 3;
+    const std::vector<double> HOME_POSITION = {-1.57, 0, 0, 0, 0, 0};
 };
 
 FailedToExecutePickPlate::FailedToExecutePickPlate(const std::string message) noexcept:
@@ -91,11 +92,9 @@ void Pick_Place::addTable(std::string &object_id, double x, double y, double z) 
 
 void Pick_Place::addBoxes(Box &box) {
 
-    //    Creating Box Environment
-    /* collision object created */
     moveit_msgs::CollisionObject collision_object;
 
-//    Adding table to places containers
+    // Adding table to places containers
     collision_object.id = box.getUniqueId();
     collision_object.header.frame_id = abb_group_ptr->getPlanningFrame();
 
@@ -126,11 +125,10 @@ void Pick_Place::addBoxes(Box &box) {
 
 void Pick_Place::addContainers(Box &container) {
 
-//    Creating Containers Environment
     /* collision object created */
     moveit_msgs::CollisionObject collision_object;
 
-//    Adding table to places containers
+    // Adding table to places containers
     collision_object.id = container.getUniqueId();
     collision_object.header.frame_id = abb_group_ptr->getPlanningFrame();
 
@@ -234,7 +232,7 @@ bool Pick_Place::moveToPickPose(const Coordinate &target_pose) {
     return success;
 }
 
-void Pick_Place::pickBox(const Box& box) {
+void Pick_Place::pickBox(const Box &box) {
     Coordinate box_pick_pose = calculateBoxPickPose(box);
 
     if (!moveToPickPose(box_pick_pose)) {
@@ -325,9 +323,8 @@ void Pick_Place::detachCollisionObjects(std::string object_id) {
 }
 
 void Pick_Place::moveToHomePosition() {
-    std::vector<double> target_joint_angles = {-1.57, 0, 0, 0, 0, 0};
     abb_group_ptr->setStartStateToCurrentState();
-    abb_group_ptr->setJointValueTarget(target_joint_angles);
+    abb_group_ptr->setJointValueTarget(Constants::HOME_POSITION);
 
     bool success = (abb_group_ptr->plan(abb_goal_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
     if (success) {
@@ -400,7 +397,7 @@ void Pick_Place::run() {
     std::vector<Box> boxes = scanBoxes();
     std::vector<Box> containers = scanContainers();
     std::map<int, Box> container_map = buildContainerQRCodeMap(containers);
-    auto comp = [](const Box& a, const Box& b) {
+    auto comp = [](const Box &a, const Box &b) {
         if (a.getCenterCoordinate().getZ() == b.getCenterCoordinate().getZ()) {
             return a.getCenterCoordinate().getY() <= b.getCenterCoordinate().getY();
         }
@@ -408,7 +405,7 @@ void Pick_Place::run() {
     };
     std::priority_queue<Box, std::vector<Box>, decltype(comp)>
             pq(comp);
-    for (const auto& box:boxes) {
+    for (const auto &box:boxes) {
         pq.push(box);
     }
 
