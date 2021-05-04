@@ -37,7 +37,7 @@
 #include "pick_n_place/mock_data.h"
 #include "pick_n_place/coordinate.h"
 #include "pick_n_place/camera_manager.h"
-#include "pick_n_place/qr_code_detector.h"
+#include "pick_n_place/qr_code_scanner.h"
 
 
 class Pick_Place {
@@ -88,12 +88,7 @@ private:
 
     //    Initializing Move Group Parameters
     moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-    moveit::planning_interface::MoveGroupInterface::Plan abb_cartesian_plan;
     moveit::planning_interface::MoveGroupInterface::Plan abb_goal_plan;
-
-
-    planning_scene_monitor::PlanningSceneMonitorPtr planning_scene_monitor;
-
 
 //    Publishers and Subscribers
     ros::Publisher planning_scene_publisher;

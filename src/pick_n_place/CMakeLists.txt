@@ -232,5 +232,5 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(logistic_case_pick_place src/coordinate.cpp src/box.cpp src/mock_data.cpp src/mock_camera_manager.cpp src/mock_qr_code_detector.cpp src/logistics_case_pick_place.cpp)
+add_executable(logistic_case_pick_place src/coordinate.cpp src/box.cpp src/mock_data.cpp src/mock_camera_manager.cpp src/mock_qr_code_scanner.cpp src/logistics_case_pick_place.cpp)
 target_link_libraries(logistic_case_pick_place ${catkin_LIBRARIES})

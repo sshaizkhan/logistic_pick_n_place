@@ -2,7 +2,7 @@
  * Mock implementation of QRCodeScanner which ensures that each QR code assigned to
  * container has a equivalent match in the Box and vice-versa.
  */
-#include "pick_n_place/qr_code_detector.h"
+#include "pick_n_place/qr_code_scanner.h"
 
 
 QRCodeScanner::QRCodeScanner() {
