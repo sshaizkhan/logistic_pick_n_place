@@ -1,7 +1,6 @@
-//
-// Created by shahwaz on 5/3/21.
-//
-
+/**
+ * Entity containing required parameters to represent a Box in 3d.
+ */
 #ifndef DEV_SHAHWAZ_KHAN_BOX_H
 #define DEV_SHAHWAZ_KHAN_BOX_H
 
@@ -30,14 +29,21 @@ public:
 
     const Coordinate& getCenterCoordinate() const;
 
+    /**
+     * Returns the front (i.e. towards the robot's end effector) facing top left coordinate.
+     */
     Coordinate getTopLeftCoordinate() const;
 
+    /**
+     * Returns the front (i.e. towards the robot's end effector) facing right bottom coordinate.
+     */
     Coordinate getBottomRightCoordinate() const;
 
+    /**
+     * Constructs the Id using Box center coordinates and returns it.
+     */
     std::string getUniqueId();
 
 };
-
-
 
 #endif //DEV_SHAHWAZ_KHAN_BOX_H

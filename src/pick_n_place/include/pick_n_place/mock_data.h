@@ -1,7 +1,6 @@
-//
-// Created by shahwaz on 5/3/21.
-//
-
+/**
+ * Responsible for building mock boxes and containers.
+ */
 #ifndef DEV_SHAHWAZ_KHAN_MOCK_DATA_H
 #define DEV_SHAHWAZ_KHAN_MOCK_DATA_H
 

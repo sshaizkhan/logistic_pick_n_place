@@ -1,7 +1,6 @@
-//
-// Created by shahwaz on 5/3/21.
-//
-
+/**
+ * Entity representing a coordinate in 3d.
+ */
 #ifndef DEV_SHAHWAZ_KHAN_COORDINATE_H
 #define DEV_SHAHWAZ_KHAN_COORDINATE_H
 
