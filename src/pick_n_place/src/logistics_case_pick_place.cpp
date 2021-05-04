@@ -6,24 +6,30 @@
 
 #include <utility>
 
-const double DEPTH_CLEARANCE_FOR_PICKUP = 0.10;
-const double HEIGHT_CLEARANCE_FOR_PLACE = 0.2;
-const double DEPTH_OFFSET_FOR_PLACE=0.2;
+namespace Constants {
+    const double DEPTH_CLEARANCE_FOR_PICKUP = 0.10;
+    const double HEIGHT_CLEARANCE_FOR_PLACE = 0.2;
+    const double DEPTH_OFFSET_FOR_PLACE = 0.2;
+//    Setting Robot string parameters
+    const std::string PLANNING_GROUP = "abb_arm";
+    const std::string ROBOT_DESCRIPTION = "abb_robot/robot_description";
+};
 
 Pick_Place::Pick_Place() {
 
     std::cout << "LOADING MOVE GROUP FOR ABB IRB2400 INDUSTRIAL ROBOT" << std::endl;
-    moveit::planning_interface::MoveGroupInterface::Options Options{PLANNING_GROUP, ROBOT_DESCRIPTION, nodeHandle};
+    moveit::planning_interface::MoveGroupInterface::Options Options{Constants::PLANNING_GROUP, Constants::ROBOT_DESCRIPTION, nodeHandle};
 
     abb_group_ptr = std::make_shared<moveit::planning_interface::MoveGroupInterface>(Options);
     abb_group_ptr->setPlanningTime(5);
     abb_group_ptr->setNumPlanningAttempts(3);
     abb_group_ptr->setPlannerId("RRTConnect");
-    joint_model_group = abb_group_ptr->getCurrentState()->getJointModelGroup(PLANNING_GROUP);
-    planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(ROBOT_DESCRIPTION);
+    const robot_state::JointModelGroup *joint_model_group = abb_group_ptr->getCurrentState()->getJointModelGroup(
+            Constants::PLANNING_GROUP);
+    planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(Constants::ROBOT_DESCRIPTION);
 
-    joint_names = joint_model_group->getVariableNames();
-    link_names = joint_model_group->getLinkModelNames();
+    std::vector<std::string> joint_names  = joint_model_group->getVariableNames();
+    std::vector<std::string> link_names  = joint_model_group->getLinkModelNames();
 
     abb_group_ptr->setGoalTolerance(0.001);
     abb_group_ptr->allowReplanning(true);
@@ -35,6 +41,7 @@ Pick_Place::Pick_Place() {
     printVector(link_names);
 
     planning_scene_publisher = nodeHandle.advertise<moveit_msgs::PlanningScene>("planning_scene", 1);
+    qrCodeScanner = QRCodeScanner();
 }
 
 
@@ -185,7 +192,7 @@ void Pick_Place::spawnEnvironment() {
 }
 
 Coordinate Pick_Place::calculateBoxPickPose(const Box &box) {
-    return {box.getCenterCoordinate().getX() - (box.getDepth() / 2) - DEPTH_CLEARANCE_FOR_PICKUP,
+    return {box.getCenterCoordinate().getX() - (box.getDepth() / 2) - Constants::DEPTH_CLEARANCE_FOR_PICKUP,
             box.getCenterCoordinate().getY(), box.getCenterCoordinate().getZ()};
 }
 
@@ -232,7 +239,7 @@ void Pick_Place::pickBox(Box box) {
     }
 }
 
-bool Pick_Place::moveToPlacePose(const Coordinate& place_target_pose) {
+bool Pick_Place::moveToPlacePose(const Coordinate &place_target_pose) {
 
     abb_group_ptr->setStartStateToCurrentState();
     geometry_msgs::Pose start_pose;
@@ -273,8 +280,8 @@ bool Pick_Place::moveToPlacePose(const Coordinate& place_target_pose) {
 
 void Pick_Place::placeBox(Coordinate center_position) {
 
-    if (!moveToPlacePose(Coordinate(center_position.getX()+DEPTH_OFFSET_FOR_PLACE, center_position.getY(),
-                                        center_position.getZ() + HEIGHT_CLEARANCE_FOR_PLACE))) {
+    if (!moveToPlacePose(Coordinate(center_position.getX() + Constants::DEPTH_OFFSET_FOR_PLACE, center_position.getY(),
+                                    center_position.getZ() + Constants::HEIGHT_CLEARANCE_FOR_PLACE))) {
         std::cout << "UNABLE TO PLAN FOR PLACE POSITION \n";
         std::cout << "ABORTING PLACE OPERATION \n";
         return;
@@ -327,9 +334,37 @@ void Pick_Place::homePosition() {
     updatePlanningScene();
 }
 
+bool containsKey(const std::map<int, Box> &map, const int &key) {
+    if (map.find(key) == map.end()) return false;
+    return true;
+}
+
+std::map<int, Box> Pick_Place::buildContainerQRCodeMap(const std::vector<Box> &containers) {
+    std::map<int, Box> container_map;
+    for (auto container:containers) {
+        int qr_code = qrCodeScanner.fetchContainerQRCode(container);
+        if (containsKey(container_map, qr_code)) {
+            throw "Each container should have a unique QR code.";
+        }
+        container_map.emplace(qr_code, container);
+    }
+    return container_map;
+}
+
+Box Pick_Place::pickMatchingQrCodeContainer(const Box &box, std::map<int, Box> &container_map) {
+    int box_qr_code = qrCodeScanner.fetchBoxQRCode(box);
+    if (!containsKey(container_map, box_qr_code)) {
+        throw "No container found with QR Code same as " + box_qr_code;
+    }
+    Box container = container_map.at(box_qr_code);
+    container_map.erase(box_qr_code);
+    return container;
+}
 
 void Pick_Place::run() {
     std::vector<Box> boxes = scanBoxes();
+    std::vector<Box> containers = scanContainers();
+    std::map<int, Box> container_map = buildContainerQRCodeMap(containers);
     auto comp = [](Box a, Box b) {
         if (a.getCenterCoordinate().getZ() == b.getCenterCoordinate().getZ()) {
             return a.getCenterCoordinate().getY() <= b.getCenterCoordinate().getY();
@@ -342,24 +377,29 @@ void Pick_Place::run() {
         pq.push(box);
     }
 
-    for (auto & container : scanContainers()) {
+    while (!container_map.empty() && !pq.empty()) {
         Box box = pq.top();
-        pickBox(box);
+        Box matching_container = pickMatchingQrCodeContainer(box, container_map);
         pq.pop();
+
+        pickBox(box);
         ros::Duration(1).sleep();
         attachCollisionObjects(box.getUniqueId());
-        placeBox(container.getCenterCoordinate());
+        placeBox(matching_container.getCenterCoordinate());
         detachCollisionObjects(box.getUniqueId());
     }
 
-    std::cout << "OPERATION TERMINATED SUCCESSFULLY" << std::endl;
+    if (!pq.empty()) {
+        std::cout << "OPERATION TERMINATED SUCCESSFULLY BUT COULD NOT PLACE ALL BOXES" << std::endl;
+    } else {
+        std::cout << "OPERATION TERMINATED SUCCESSFULLY." << std::endl;
+    }
+
     homePosition();
 }
 
 
 void Pick_Place::printVector(std::vector<std::string> &input) {
-
-    /* lambda expression to print vector*/
     std::cout << " [ ";
     for_each(input.begin(), input.end(), [](const std::string &i) {
                  std::cout << i << " ";

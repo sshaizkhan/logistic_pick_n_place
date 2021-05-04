@@ -11,7 +11,6 @@ Box::Box(double length, double height, double depth, const Coordinate &centerCoo
                                                                                            height(height), depth(depth),
                                                                                            center_coordinate(
                                                                                                    centerCoordinate) {}
-
 double Box::getLength() const {
     return length;
 }
@@ -28,15 +27,15 @@ const Coordinate &Box::getCenterCoordinate() const {
     return center_coordinate;
 }
 
-Coordinate Box::getTopLeftCoordinate() {
+Coordinate Box::getTopLeftCoordinate() const {
 
-    return {center_coordinate.getX(), center_coordinate.getY() - length / 2,
+    return {center_coordinate.getX()-depth/2, center_coordinate.getY() - length / 2,
             center_coordinate.getZ() - height / 2};
 }
 
-Coordinate Box::getBottomRightCoordinate() {
+Coordinate Box::getBottomRightCoordinate() const {
 
-    return {center_coordinate.getX(), center_coordinate.getY() + length / 2,
+    return {center_coordinate.getX()-depth/2, center_coordinate.getY() + length / 2,
             center_coordinate.getZ() + height / 2};
 }
 
