@@ -1,14 +1,3 @@
-[comment]: <> ([![Contributors][contributors-shield]][contributors-url])
-
-[comment]: <> ([![Forks][forks-shield]][forks-url])
-
-[comment]: <> ([![Stargazers][stars-shield]][stars-url])
-
-[comment]: <> ([![Issues][issues-shield]][issues-url])
-
-[comment]: <> ([![MIT License][license-shield]][license-url])
-
-[comment]: <> ([![LinkedIn][linkedin-shield]][linkedin-url])
 
 <!-- PROJECT LOGO -->
 <br />
@@ -177,6 +166,13 @@ working of the differential wheel drive can also be seen in the video.
   </a>
 
 ### Video
+The working of the differential wheel drive can be visualized on both RViz and Gazebo from the video below:
+
+<p align="center">
+  <a href="https://drive.google.com/file/d/1o9UygzjGgmbebV2kQ9u0eAbw7pBC-kX6/view?usp=sharing">
+    <img src="src/resources/differential_wheel_drive.mp4" alt="Logo" width="1000" height="850">
+  </a>
+
 
 ### ABB IRB2600 Robot
 
@@ -202,7 +198,7 @@ Check out the video to visualize the complete pick and place operation performed
 mobile base. In the video, it can observed that the robot will successfully complete the pick and place operation for
 three robots and then will move to the home position.
 
-![Packaging video](https://drive.google.com/file/d/1ZqCYGY2boIU0i4A6bUEENG2Xz630SbSV/view?usp=sharing)
+![Packaging video](https://drive.google.com/file/d/1o9UygzjGgmbebV2kQ9u0eAbw7pBC-kX6/view?usp=sharing)
 
 <!-- ASSUMPTIONS -->
 
