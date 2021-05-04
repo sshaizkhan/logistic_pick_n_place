@@ -18,7 +18,8 @@ namespace Constants {
 Pick_Place::Pick_Place() {
 
     std::cout << "LOADING MOVE GROUP FOR ABB IRB2400 INDUSTRIAL ROBOT" << std::endl;
-    moveit::planning_interface::MoveGroupInterface::Options Options{Constants::PLANNING_GROUP, Constants::ROBOT_DESCRIPTION, nodeHandle};
+    moveit::planning_interface::MoveGroupInterface::Options Options{Constants::PLANNING_GROUP,
+                                                                    Constants::ROBOT_DESCRIPTION, nodeHandle};
 
     abb_group_ptr = std::make_shared<moveit::planning_interface::MoveGroupInterface>(Options);
     abb_group_ptr->setPlanningTime(5);
@@ -26,10 +27,11 @@ Pick_Place::Pick_Place() {
     abb_group_ptr->setPlannerId("RRTConnect");
     const robot_state::JointModelGroup *joint_model_group = abb_group_ptr->getCurrentState()->getJointModelGroup(
             Constants::PLANNING_GROUP);
-    planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(Constants::ROBOT_DESCRIPTION);
+    planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(
+            Constants::ROBOT_DESCRIPTION);
 
-    std::vector<std::string> joint_names  = joint_model_group->getVariableNames();
-    std::vector<std::string> link_names  = joint_model_group->getLinkModelNames();
+    std::vector<std::string> joint_names = joint_model_group->getVariableNames();
+    std::vector<std::string> link_names = joint_model_group->getLinkModelNames();
 
     abb_group_ptr->setGoalTolerance(0.001);
     abb_group_ptr->allowReplanning(true);
@@ -219,11 +221,6 @@ bool Pick_Place::moveToPickPose(const Coordinate &target_pose) {
 
         std::cout << "PLANNING SUCCESSFUL, MOVING TO DESIGNATED TARGET......." << std::endl;
         abb_group_ptr->move();
-//        planning_scene_monitor->startSceneMonitor();
-//        planning_scene_monitor->startStateMonitor();
-//        planning_scene_monitor->updateSceneWithCurrentState();
-//        planning_scene_monitor->triggerSceneUpdateEvent(planning_scene_monitor::PlanningSceneMonitor::SceneUpdateType::UPDATE_STATE );
-//        planning_scene_monitor->triggerSceneUpdateEvent(planning_scene_monitor::PlanningSceneMonitor::SceneUpdateType::UPDATE_SCENE );
         updatePlanningScene();
     }
     return success;
@@ -267,11 +264,6 @@ bool Pick_Place::moveToPlacePose(const Coordinate &place_target_pose) {
         ros::WallDuration(3).sleep();
         ROS_INFO("Planning successful, moving to designated goal");
         abb_group_ptr->move();
-//        planning_scene_monitor->startSceneMonitor();
-//        planning_scene_monitor->startStateMonitor();
-//        planning_scene_monitor->updateSceneWithCurrentState();
-//        planning_scene_monitor->triggerSceneUpdateEvent(planning_scene_monitor::PlanningSceneMonitor::SceneUpdateType::UPDATE_STATE );
-//        planning_scene_monitor->triggerSceneUpdateEvent(planning_scene_monitor::PlanningSceneMonitor::SceneUpdateType::UPDATE_SCENE );
         updatePlanningScene();
 
     }
@@ -344,7 +336,7 @@ std::map<int, Box> Pick_Place::buildContainerQRCodeMap(const std::vector<Box> &c
     for (auto container:containers) {
         int qr_code = qrCodeScanner.fetchContainerQRCode(container);
         if (containsKey(container_map, qr_code)) {
-            throw "Each container should have a unique QR code.";
+            throw "Each container should have a unique QR code.\n";
         }
         container_map.emplace(qr_code, container);
     }

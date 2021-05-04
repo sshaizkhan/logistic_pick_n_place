@@ -1,8 +1,0 @@
-prefix=/home/shahwaz/Documents/dev-shahwaz-khan/devel
-
-Name: husky_navigation
-Description: Description of husky_navigation
-Version: 0.4.8
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

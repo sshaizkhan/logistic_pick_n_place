@@ -1,8 +1,0 @@
-prefix=/home/shahwaz/Documents/dev-shahwaz-khan/install
-
-Name: abb_mobile_base_moveit_config
-Description: Description of abb_mobile_base_moveit_config
-Version: 0.3.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/home/shahwaz/Documents/dev-shahwaz-khan/devel
-
-Name: mobilebot_launch
-Description: Description of mobilebot_launch
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

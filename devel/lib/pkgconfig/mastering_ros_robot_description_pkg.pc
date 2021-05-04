@@ -1,8 +1,0 @@
-prefix=/home/shahwaz/Documents/dev-shahwaz-khan/devel
-
-Name: mastering_ros_robot_description_pkg
-Description: Description of mastering_ros_robot_description_pkg
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
