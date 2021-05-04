@@ -1,2 +1,0 @@
-abb/abb:abb/abb_irb2400_moveit_config:abb/abb_irb2400_moveit_plugins:abb/abb_irb2400_support:abb/abb_irb4400_support:abb/abb_irb5400_support:abb/abb_irb6600_support:abb/abb_irb6640_moveit_config:abb/abb_irb6640_support:abb/abb_resources:abb_mobilebot_moveit_config:mobile_bot/mobilebot_control:mobile_bot/mobilebot_description:mobile_bot/mobilebot_launch:pick_n_place
--DCATKIN_DEVEL_PREFIX=/home/shahwaz/Documents/dev-shahwaz-khan/devel -DCMAKE_INSTALL_PREFIX=/home/shahwaz/Documents/dev-shahwaz-khan/install -G Unix Makefiles

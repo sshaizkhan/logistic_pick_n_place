@@ -54,3 +54,5 @@ Thumbs.db
 src/.vscode
 src/cmake-build-debug
 src/pick_n_place/cmake-build-debug
+build
+devel

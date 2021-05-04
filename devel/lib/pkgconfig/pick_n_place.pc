@@ -1,8 +1,0 @@
-prefix=/home/shahwaz/Documents/dev-shahwaz-khan/devel
-
-Name: pick_n_place
-Description: Description of pick_n_place
-Version: 0.0.0
-Cflags: -I/home/shahwaz/Documents/dev-shahwaz-khan/src/pick_n_place/include
-Libs: -L${prefix}/lib -lpick_n_place
-Requires: 
