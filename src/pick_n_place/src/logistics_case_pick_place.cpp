@@ -13,7 +13,17 @@ namespace Constants {
 //    Setting Robot string parameters
     const std::string PLANNING_GROUP = "abb_arm";
     const std::string ROBOT_DESCRIPTION = "abb_robot/robot_description";
+    const int RETRYABLE_ATTEMPTS_FOR_QR_CODE_SCANNER = 3;
 };
+
+FailedToExecutePickPlate::FailedToExecutePickPlate(const std::string message) noexcept:
+        m_message(message) {
+    std::cout << this->m_message << std::endl;
+}
+
+const char *FailedToExecutePickPlate::what() const noexcept {
+    return this->m_message.c_str();
+}
 
 Pick_Place::Pick_Place() {
 
@@ -27,8 +37,6 @@ Pick_Place::Pick_Place() {
     abb_group_ptr->setPlannerId("RRTConnect");
     const robot_state::JointModelGroup *joint_model_group = abb_group_ptr->getCurrentState()->getJointModelGroup(
             Constants::PLANNING_GROUP);
-    planning_scene_monitor = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(
-            Constants::ROBOT_DESCRIPTION);
 
     std::vector<std::string> joint_names = joint_model_group->getVariableNames();
     std::vector<std::string> link_names = joint_model_group->getLinkModelNames();
@@ -226,7 +234,7 @@ bool Pick_Place::moveToPickPose(const Coordinate &target_pose) {
     return success;
 }
 
-void Pick_Place::pickBox(Box box) {
+void Pick_Place::pickBox(const Box& box) {
     Coordinate box_pick_pose = calculateBoxPickPose(box);
 
     if (!moveToPickPose(box_pick_pose)) {
@@ -260,6 +268,7 @@ bool Pick_Place::moveToPlacePose(const Coordinate &place_target_pose) {
     abb_group_ptr->setGoalOrientationTolerance(0.0000000001);
 
     bool success = (abb_group_ptr->plan(abb_goal_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
     if (success) {
         ros::WallDuration(3).sleep();
         ROS_INFO("Planning successful, moving to designated goal");
@@ -276,7 +285,9 @@ void Pick_Place::placeBox(Coordinate center_position) {
                                     center_position.getZ() + Constants::HEIGHT_CLEARANCE_FOR_PLACE))) {
         std::cout << "UNABLE TO PLAN FOR PLACE POSITION \n";
         std::cout << "ABORTING PLACE OPERATION \n";
-        return;
+        std::stringstream buffer;
+        buffer << "Failed to place the box with coordinates: " << center_position << std::endl;
+        throw FailedToExecutePickPlate(buffer.str());
     }
 }
 
@@ -313,7 +324,7 @@ void Pick_Place::detachCollisionObjects(std::string object_id) {
     updatePlanningScene();
 }
 
-void Pick_Place::homePosition() {
+void Pick_Place::moveToHomePosition() {
     std::vector<double> target_joint_angles = {-1.57, 0, 0, 0, 0, 0};
     abb_group_ptr->setStartStateToCurrentState();
     abb_group_ptr->setJointValueTarget(target_joint_angles);
@@ -331,12 +342,42 @@ bool containsKey(const std::map<int, Box> &map, const int &key) {
     return true;
 }
 
+int Pick_Place::fetchBoxQRCodeWithRetry(const Box &box, int attempts) {
+    if (attempts == 0) {
+        std::stringstream buffer;
+        buffer << "Failed to fetch Box QRCode: " << box << std::endl;
+        throw FailedToExecutePickPlate(buffer.str());
+    }
+    try {
+        return qrCodeScanner.fetchBoxQRCode(box);
+    }
+    catch (FailedToScanQRCode &exception) {
+        std::cout << "Failed to scan QR code. Retrying" << std::endl;
+    }
+    return fetchBoxQRCodeWithRetry(box, attempts - 1);
+}
+
+int Pick_Place::fetchContainerQRCodeWithRetry(const Box &box, int attempts) {
+    if (attempts == 0) {
+        std::stringstream buffer;
+        buffer << "Failed to fetch Container QRCode: " << box << std::endl;
+        throw FailedToExecutePickPlate(buffer.str());
+    }
+    try {
+        return qrCodeScanner.fetchContainerQRCode(box);
+    }
+    catch (FailedToScanQRCode &exception) {
+        std::cout << "Failed to scan QR code. Retrying" << std::endl;
+    }
+    return fetchContainerQRCodeWithRetry(box, attempts - 1);
+}
+
 std::map<int, Box> Pick_Place::buildContainerQRCodeMap(const std::vector<Box> &containers) {
     std::map<int, Box> container_map;
     for (auto container:containers) {
-        int qr_code = qrCodeScanner.fetchContainerQRCode(container);
+        int qr_code = fetchContainerQRCodeWithRetry(container, Constants::RETRYABLE_ATTEMPTS_FOR_QR_CODE_SCANNER);
         if (containsKey(container_map, qr_code)) {
-            throw "Each container should have a unique QR code.\n";
+            throw FailedToExecutePickPlate("Each container should have a unique QR code.");
         }
         container_map.emplace(qr_code, container);
     }
@@ -344,9 +385,11 @@ std::map<int, Box> Pick_Place::buildContainerQRCodeMap(const std::vector<Box> &c
 }
 
 Box Pick_Place::pickMatchingQrCodeContainer(const Box &box, std::map<int, Box> &container_map) {
-    int box_qr_code = qrCodeScanner.fetchBoxQRCode(box);
+    int box_qr_code = fetchBoxQRCodeWithRetry(box, Constants::RETRYABLE_ATTEMPTS_FOR_QR_CODE_SCANNER);
     if (!containsKey(container_map, box_qr_code)) {
-        throw "No container found with QR Code same as " + box_qr_code;
+        std::stringstream buffer;
+        buffer << "No container found with QR Code same as : " << box_qr_code << " for box: " << box << std::endl;
+        throw FailedToExecutePickPlate(buffer.str());
     }
     Box container = container_map.at(box_qr_code);
     container_map.erase(box_qr_code);
@@ -357,7 +400,7 @@ void Pick_Place::run() {
     std::vector<Box> boxes = scanBoxes();
     std::vector<Box> containers = scanContainers();
     std::map<int, Box> container_map = buildContainerQRCodeMap(containers);
-    auto comp = [](Box a, Box b) {
+    auto comp = [](const Box& a, const Box& b) {
         if (a.getCenterCoordinate().getZ() == b.getCenterCoordinate().getZ()) {
             return a.getCenterCoordinate().getY() <= b.getCenterCoordinate().getY();
         }
@@ -365,7 +408,7 @@ void Pick_Place::run() {
     };
     std::priority_queue<Box, std::vector<Box>, decltype(comp)>
             pq(comp);
-    for (auto box:boxes) {
+    for (const auto& box:boxes) {
         pq.push(box);
     }
 
@@ -387,7 +430,7 @@ void Pick_Place::run() {
         std::cout << "OPERATION TERMINATED SUCCESSFULLY." << std::endl;
     }
 
-    homePosition();
+    moveToHomePosition();
 }
 
 
@@ -399,6 +442,10 @@ void Pick_Place::printVector(std::vector<std::string> &input) {
     );
     std::cout << "]" << std::endl;
 }
+
+Pick_Place::~Pick_Place() {
+}
+
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "logistic_case_picking");

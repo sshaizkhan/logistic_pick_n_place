@@ -1,7 +1,7 @@
-//
-// Created by shahwazk@usc.edu on 4/30/21.
-//
-
+/**
+ * Module responsible for spawning boxes & containers and later picking up boxes one by one and
+ * placing it on the container with matching QR code.
+ */
 #ifndef DEV_SHAHWAZ_KHAN_LOGISTICS_CASE_PICK_PLACE_H
 #define DEV_SHAHWAZ_KHAN_LOGISTICS_CASE_PICK_PLACE_H
 
@@ -12,6 +12,7 @@
 #include "std_msgs/String.h"
 #include "memory"
 #include <iostream>
+
 
 //MoveIt
 #include "moveit/planning_scene_interface/planning_scene_interface.h"
@@ -39,21 +40,33 @@
 #include "pick_n_place/camera_manager.h"
 #include "pick_n_place/qr_code_scanner.h"
 
+class FailedToExecutePickPlate : public std::exception {
+public:
+    FailedToExecutePickPlate(std::string message) noexcept;
+    ~FailedToExecutePickPlate() override = default;
+    const char* what() const noexcept override;
+
+private:
+    std::string m_message;
+};
 
 class Pick_Place {
 private:
-    /*data*/
     QRCodeScanner qrCodeScanner;
 
+    ros::NodeHandle nodeHandle;
+    moveit::planning_interface::MoveGroupInterfacePtr abb_group_ptr;
+
+    // Initializing Move Group Parameters
+    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+    moveit::planning_interface::MoveGroupInterface::Plan abb_goal_plan;
+
+    // Publishers and Subscribers
+    ros::Publisher planning_scene_publisher;
+private:
     Box pickMatchingQrCodeContainer(const Box &box, std::map<int, Box> &container_map);
 
     std::map<int, Box> buildContainerQRCodeMap(const std::vector<Box> &containers);
-
-//   Initialise ROS parameters
-    ros::NodeHandle nodeHandle;
-    //    Moveit Planning Interface
-    moveit::planning_interface::MoveGroupInterfacePtr abb_group_ptr;
-
     void addTable(std::string &object_id, double x, double y, double z);
 
     void addBoxes(Box &box);
@@ -70,6 +83,8 @@ private:
 
     void updatePlanningScene();
 
+    int fetchBoxQRCodeWithRetry(const Box& box,int attempts);
+    int fetchContainerQRCodeWithRetry(const Box& box,int attempts);
     bool moveToPickPose(const Coordinate &target_position);
 
     bool moveToPlacePose(const Coordinate &target_position);
@@ -78,25 +93,18 @@ private:
 
     void detachCollisionObjects(std::string object_id);
 
-    void pickBox(Box box);
+    void pickBox(const Box& box);
 
     void placeBox(Coordinate coordinate);
 
     static void printVector(std::vector<std::string> &input);
 
-    void homePosition();
-
-    //    Initializing Move Group Parameters
-    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-    moveit::planning_interface::MoveGroupInterface::Plan abb_goal_plan;
-
-//    Publishers and Subscribers
-    ros::Publisher planning_scene_publisher;
+    void moveToHomePosition();
 public:
+    virtual ~Pick_Place();
     Pick_Place();
     void spawnEnvironment();
     void run();
-
 };
 
 #endif //DEV_SHAHWAZ_KHAN_LOGISTICS_CASE_PICK_PLACE_H

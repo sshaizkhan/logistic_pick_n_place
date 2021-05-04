@@ -37,7 +37,7 @@
             <arg name="debug" value="false"/>
         </include>
 
-        <node name="abb_robot_planning" pkg="pick_n_place" type="logistic_case_pick_place" respawn="true" output="screen"/>
+        <node name="abb_robot_planning"  pkg="pick_n_place" type="logistic_case_pick_place" output="screen"  launch-prefix="valgrind --leak-check=full"/>
     </group>
 
 
