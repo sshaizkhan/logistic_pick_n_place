@@ -1,2 +1,0 @@
-pick_n_place
--DCATKIN_DEVEL_PREFIX=/home/shahwaz/Documents/dev-shahwaz-khan/devel -DCMAKE_INSTALL_PREFIX=/home/shahwaz/Documents/dev-shahwaz-khan/install -G Unix Makefiles

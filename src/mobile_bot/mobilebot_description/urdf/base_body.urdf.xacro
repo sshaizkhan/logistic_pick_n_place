@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot  xmlns:xacro="http://ros.org/wiki/xacro"
+        name="mobile_bot" >
+
+    <xacro:include filename="$(find mobilebot_description)/urdf/wheel.urdf.xacro" />
+
+    <xacro:arg name="mesh_enabled" default="true" />
+    <xacro:arg name="robot_namespace" default="/"/>
+
+    <link name = "base_link">
+        <inertial>
+            <origin xyz="0 0 0.5" rpy="0 0 0"/>
+            <mass value="811.10"/>
+            <inertia ixx="104.10" ixy="0.0" ixz="0.00"
+                     iyy="194.79" iyz="0.0"
+                     izz="275.36"/>
+        </inertial>
+        <visual>
+            <xacro:if value="$(arg mesh_enabled)">
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://mobilebot_description/meshes/mobile_base.dae" />
+                </geometry>
+            </xacro:if>
+            <xacro:unless value="$(arg mesh_enabled)">
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="1.66 1.18 0.42" />
+                </geometry>
+                <material name="Blue" />
+            </xacro:unless>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <box size="1.66 1.18 0.42" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name =  "base_footprint">
+
+    <joint name = "base_joint"  type = "fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0.0 0.0 0.42" rpy="0 3.14 0" />
+        <axis xyz="0 1 0" rpy="0 0 0" />
+    </joint>
+
+    <xacro:wheel wheel_prefix="left_back_wheel" parent_link="base_link" >
+        <origin xyz="0.465 -0.64 0.35" rpy="1.57 0 0" />
+    </xacro:wheel>
+
+    <xacro:wheel wheel_prefix="left_front_wheel" parent_link="base_link" >
+        <origin xyz="-0.535 -0.64 0.35" rpy="1.57 0 0" />
+    </xacro:wheel>
+
+    <xacro:wheel wheel_prefix="right_front_wheel" parent_link="base_link" >
+        <origin xyz="0.465 0.76 0.35" rpy="1.57 0 0" />
+    </xacro:wheel>
+
+    <xacro:wheel wheel_prefix="right_back_wheel" parent_link="base_link" >
+        <origin xyz="-0.535 0.76 0.35" rpy="1.57 0 0" />
+    </xacro:wheel>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>$(arg robot_namespace)</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
+        </plugin>
+    </gazebo>
+
+</robot>

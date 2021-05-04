@@ -1,0 +1,44 @@
+
+<launch>
+    <group ns="abb_robot">
+        <rosparam command="load" file="$(find abb_mobilebot_moveit_config)/config/joints_name.yaml" />
+
+        <include file="$(find abb_mobilebot_moveit_config)/launch/planning_context.launch">
+            <arg name="load_robot_description" value="true"/>
+        </include>
+
+        <arg name="use_gui" default="false" />
+
+        <arg name="use_rviz" default="true" />
+
+        <!-- We do not have a robot connected, so publish fake joint states -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg use_gui)">
+            <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam>
+        </node>
+        <node name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" if="$(arg use_gui)">
+            <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam>
+        </node>
+
+        <node name="abb_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+        <include file="$(find abb_mobilebot_moveit_config)/launch/move_group.launch">
+            <arg name="publish_monitored_planning_scene" value="true"/>
+            <arg name="allow_trajectory_execution" value="true"/>
+            <arg name="fake_execution" value="true"/>
+        </include>
+
+        <!--To launch Rviz for MoveIt-->
+        <!-- <include file="$(find moveit_config_ur5)/launch/moveit_rviz_robot1.launch">
+          <arg name="config" value="true"/>
+        </include> -->
+
+        <include file="$(find abb_mobilebot_moveit_config)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
+            <arg name="rviz_config" value="$(find abb_mobilebot_moveit_config)/launch/moveit.rviz"/>
+            <arg name="debug" value="false"/>
+        </include>
+<!--        xterm -e gdb &#45;&#45;args-->
+        <node name="abb_robot_planning"  pkg="pick_n_place" type="logistic_case_pick_place" output="screen"  launch-prefix="valgrind "/>
+    </group>
+
+
+</launch>

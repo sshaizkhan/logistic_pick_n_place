@@ -50,3 +50,10 @@ Thumbs.db
 
 # catkin_make created files or folders
 .catkin_workspace
+.vscode
+src/.vscode
+src/cmake-build-debug
+src/pick_n_place/cmake-build-debug
+build
+devel
+.gradle

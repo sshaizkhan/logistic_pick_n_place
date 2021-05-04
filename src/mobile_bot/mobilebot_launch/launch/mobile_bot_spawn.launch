@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="mesh_enabled" default="true"/>
+    <arg name="robot_namespace" default="/"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" default="false"/>
+        <arg name="gui_required" value="true"/>
+
+    </include>
+
+    <group ns="$(arg robot_namespace)">
+
+        <param name="robot_description" command="$(find xacro)/xacro '$(find mobilebot_description)/urdf/base_body.urdf.xacro'
+            --inorder   mesh_enabled:=$(arg mesh_enabled) robot_namespace:=$(arg robot_namespace)" />
+
+        <node name="mobile_bot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="
+                        -z 0.0
+                        -urdf -param robot_description
+                        -model $(arg robot_namespace)" />
+
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        </node>
+
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        </node>
+    </group>
+</launch>

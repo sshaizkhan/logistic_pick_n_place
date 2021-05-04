@@ -8,15 +8,42 @@ project(pick_n_place)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-)
+        roscpp
+        moveit_commander moveit_core
+        moveit_fake_controller_manager
+        moveit_msgs
+        moveit_planners_ompl
+        moveit_ros_benchmarks
+        moveit_ros_control_interface
+        moveit_ros_manipulation
+        moveit_ros_move_group
+        moveit_ros_perception
+        moveit_ros_planning
+        moveit_ros_planning_interface
+        moveit_ros_robot_interaction
+        moveit_ros_visualization
+        moveit_ros_warehouse
+        moveit_setup_assistant
+        moveit_simple_controller_manager
+        rqt_moveit
+        moveit_visual_tools
+        rviz_visual_tools
+        )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
-
+find_package(Eigen3)
+if (NOT EIGEN3_FOUND)
+    # Fallback to cmake_modules
+    find_package(cmake_modules REQUIRED)
+    find_package(Eigen REQUIRED)
+    set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+    set(EIGEN3_LIBRARIES ${EIGEN_LIBRARIES})  # Not strictly necessary as Eigen is head only
+    # Possibly map additional variables to the EIGEN3_ prefix.
+else ()
+    set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+endif ()
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -103,10 +130,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES pick_n_place
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+        INCLUDE_DIRS include
+          LIBRARIES pick_n_place
+        #  CATKIN_DEPENDS roscpp rospy std_msgs
+          DEPENDS system_lib
 )
 
 ###########
@@ -116,8 +143,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+        include
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -204,3 +231,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(logistic_case_pick_place src/coordinate.cpp src/box.cpp src/mock_data.cpp src/mock_camera_manager.cpp src/mock_qr_code_scanner.cpp src/logistics_case_pick_place.cpp)
+target_link_libraries(logistic_case_pick_place ${catkin_LIBRARIES})
