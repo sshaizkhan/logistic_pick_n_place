@@ -75,7 +75,8 @@ The relevant README files for the above two deliverables are :
 ### Built With
 
 The project is made using the following framework and hardware:
-*[ROS](https://www.ros.org/)
+
+* [ROS](https://www.ros.org/)
 
 * [C++](https://www.cplusplus.com/)
 
